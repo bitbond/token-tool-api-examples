@@ -1,0 +1,8 @@
+node_modules/
+
+# Tooling
+.tool-versions
+
+# Key files
+*_key
+*_secret
