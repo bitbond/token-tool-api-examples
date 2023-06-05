@@ -1,14 +1,15 @@
 // New token configuration
 export const token = {
-  name: "ABC-2 Token",
-  symbol: "ABC-2",
+  name: "ABC-3 Token",
+  symbol: "ABC-3",
   // Initial supply of tokens to be minted with token creation
   initialSupply: "100",
+  // Number of decimals to be used by the token
   decimals: "18",
   // Owner address of deployed token contract.
   // It can be the address of vault account signing the transaction,
   // but it can also be any other address that will own the contract after creation.
-  issuerAddress: "0x20F0022FBE21a1CC1304C25Da20Cd8DF66289da4",
+  issuerAddress: "0x...",
   flags: {
     // Additional tokens can be minted after contract creation to increase supply
     _isMintable: false,
@@ -37,7 +38,7 @@ export const token = {
   // If _isDocumentAllowed is true,
   // this specifies the document URI that can be updated by the owner
   documentUri: "",
-}
+};
 
 export const fireblocksParams = {
   // Vault used to sign the transaction,
@@ -51,7 +52,7 @@ export const fireblocksParams = {
   note: "Deploying FullFeatureToken",
   // Should always be 0, amount of native currency to send with the call
   amount: "0"
-}
+};
 
 // Provided by Bitbond
 export const factoryAddress = "0x88777bcCb752B20245400049021CB47b8fbCf640";
