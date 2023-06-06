@@ -26,7 +26,7 @@ export const token = {
     // Token transfers are only possible to whitelisted addresses
     // or if the token is freely transferable.
     _isWhitelistEnabled: false,
-    // If  tokens that an address can hold
+    // Limit the number of tokens that an address can hold
     _isMaxAmountOfTokensSet: false,
     // Tokens can be force-transferred by the owner,
     // cannot be deactivated after creation
