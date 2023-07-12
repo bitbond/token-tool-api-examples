@@ -1,6 +1,7 @@
 node_modules/
 
 # Tooling
+.DS_Store
 .tool-versions
 
 # Key files
