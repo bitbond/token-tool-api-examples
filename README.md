@@ -22,7 +22,7 @@ Exact installation steps depend on the platfrom, please refer to the documentati
 npm install
 ```
 
-### Fireblocks
+### Fireblocks examples
 Copy API user key and private key created with Fireblocks into root directory of this repo.
 Refer to `fireblocks_key.example` and `fireblocks_secret.example` files to verify that
 the format of the key matches values expected by the scripts.
@@ -45,8 +45,7 @@ matches values expected by the scripts.
 
 Replace <custody> with `fireblocks` or `custodyAgnostic`:
 1. Customize configuration in `<custody>/deployToken.ts`.
-1. Customize Fireblocks configuration in `fireblocks/deployToken.ts` to select
-Fireblocks vault and chain that will used for the deployment.
+1. (optional) If using Fireblocks configuration in `fireblocks/deployToken.ts` to select the vault and chain that will used for the deployment.
 1. To deploy the token run:
 ```
 npx ts-node ./<custody>/deployToken.ts
