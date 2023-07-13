@@ -31,7 +31,7 @@ const rpcUrl = "https://rpc-mumbai.maticvigil.com";
   // Parse amount of tokens to send taking into account the decimals
   const parsedAmount = ethers.utils.parseUnits(amount, token.decimals);
 
-  // Call the contract's `burned` function
+  // Call the contract's burn function
   const tx = await contract.burn(parsedAmount);
 
   // Wait until transaction is mined

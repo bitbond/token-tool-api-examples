@@ -33,7 +33,7 @@ const recipientAddress = "0x...";
   // Parse amount of tokens to send taking into account the decimals
   const parsedAmount = ethers.utils.parseUnits(amount, token.decimals);
 
-  // Call the contract's `mint` function
+  // Call the contract's mint function
   const tx = await contract.mint(recipientAddress, parsedAmount);
 
   // Wait until transaction is mined

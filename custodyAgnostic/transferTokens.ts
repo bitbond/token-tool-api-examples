@@ -33,7 +33,7 @@ const recipientAddress = "0x...";
   // Parse amount of tokens to send taking into account the decimals
   const parsedAmount = ethers.utils.parseUnits(amount, token.decimals);
 
-  // Call the contract's `transfer` function
+  // Call the contract's transfer function
   const tx = await contract.transfer(recipientAddress, parsedAmount);
 
   // Wait until transaction is mined
