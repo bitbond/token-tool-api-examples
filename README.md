@@ -12,6 +12,8 @@ JavaScript by removing type definitions.
 
 Example token deployment: [Block explorer](https://mumbai.polygonscan.com/tx/0xd366367005e841cc97e0ffd02002114dfae41222559116b54f56298d45bf057d)
 
+![Token creation diagram](docs/creation-diagram.jpg)
+
 ## Requirements
 Recommended:
 - Node.js 18.16.0 or higher
