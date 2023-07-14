@@ -1,3 +1,5 @@
+![Bitbond logo](docs/bitbond-logo.png)
+
 # Bitbond Token Tool API examples
 This repository contains a suite of script samples that demonstrate how to
 programmatically interact with Bitbond Token Tool contracts. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
@@ -47,7 +49,7 @@ matches values expected by the scripts.
 
 Replace `<key-custody>` with `fireblocks` or `localKey`:
 1. Customize configuration in `<key-custody>/deployToken.ts`.
-1. (Fireblocks optional) Customize `fireblocks/deployToken.ts` to select the vault and chain that will used for the deployment.
+1. (Fireblocks optional) Customize `fireblocks/deployToken.ts` to select the vault and chain that will be used for the deployment.
 1. To deploy the token run:
 ```
 npx ts-node ./<key-custody>/deployToken.ts
