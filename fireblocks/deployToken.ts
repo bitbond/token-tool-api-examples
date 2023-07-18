@@ -67,11 +67,6 @@ export const fireblocksParams = {
 // Provided by Bitbond
 export const factoryAddress = "0x88777bcCb752B20245400049021CB47b8fbCf640";
 
-type ContractArtifact = {
-  abi: ContractInterface;
-  bytecode: BytesLike;
-};
-
 const fireblocks = () => {
   const fireblocksApiKey = fs.readFileSync("./fireblocks_api_key", "utf-8").trim();
   const fireblocksPrivateKey = fs.readFileSync("./fireblocks_private_key", "utf-8").trim();
@@ -82,21 +77,25 @@ const fireblocks = () => {
   return new FireblocksSDK(fireblocksPrivateKey, fireblocksApiKey);
 };
 
-const getBytecode =
-  <T extends ContractFactory>({ abi, bytecode }: ContractArtifact) =>
-    (...args: Parameters<T["deploy"]>) => {
-      const factory = new ethers.ContractFactory(abi, bytecode);
-      const deployTxBytecode = factory.getDeployTransaction(...args).data;
-      if (!deployTxBytecode) {
-        throw new Error("Bytecode for deploy not generated!");
-      }
-      return deployTxBytecode;
-    };
+(async () => {
+  const factoryContract = new ethers.Contract(factoryAddress, bitbondFactory.abi);
+  const factory = new ethers.ContractFactory(tokenArtifact.abi, tokenArtifact.bytecode);
 
-const processTransaction = async (
-  tx: Deferrable<PopulatedTransaction>
-) => {
-  const res = await fireblocks().createTransaction({
+  const tokenParams = [
+    token.name,
+    token.symbol,
+    token.initialSupply,
+    token.decimals,
+    token.issuerAddress,
+    token.flags,
+    token.balanceLimit,
+    token.documentUri
+  ];
+  const bytecode = factory.getDeployTransaction(...tokenParams).data;
+  const tx: PopulatedTransaction =
+    await factoryContract.populateTransaction.deployContract(bytecode);
+
+  const result = await fireblocks().createTransaction({
     operation: TransactionOperation.CONTRACT_CALL,
     assetId: fireblocksParams.assetId,
     source: {
@@ -116,30 +115,7 @@ const processTransaction = async (
     },
   });
 
-  console.log("Waiting for the transaction to be signed");
-  console.log(`Transaction ${res.id} has been broadcasted.`);
-};
-
-(async () => {
-  const factoryContract = new ethers.Contract(
-    factoryAddress,
-    bitbondFactory.abi
-  );
-
-  const bytecode = getBytecode(tokenArtifact)(
-    token.name,
-    token.symbol,
-    token.initialSupply,
-    token.decimals,
-    token.issuerAddress,
-    token.flags,
-    token.balanceLimit,
-    token.documentUri
-  );
-  const tx: PopulatedTransaction =
-    await factoryContract.populateTransaction.deployContract(bytecode);
-
-  await processTransaction(tx);
+  console.log(JSON.stringify(result, null, 2));
 })().catch((e)=>{
   console.error(`Failed: ${e}`);
 });
