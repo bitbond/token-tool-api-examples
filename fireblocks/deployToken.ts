@@ -47,7 +47,7 @@ export const token = {
   documentUri: "",
 };
 
-export const fireblocksParams = {
+const fireblocksParams = {
   // Vault ID that is used to sign the transaction,
   // Could be any vault with enough balance to cover the transaction fee
   // To transfer ownership of contract on its creation use token.issuerAddress
@@ -56,14 +56,12 @@ export const fireblocksParams = {
   // Determines the network where transaction is executed,
   // refer to Fireblocks documentation for other native asset codes
   assetId: "MATIC_POLYGON_MUMBAI",
-  // Any string
-  note: "Deploying token",
-  // Should always be 0, amount of native currency to send with the call
-  amount: "0"
+  // Any string, will be visible in Fireblocks console
+  note: `Deploying token ${token.symbol}`,
 };
 
 // Provided by Bitbond
-export const factoryAddress = "0x88777bcCb752B20245400049021CB47b8fbCf640";
+const factoryAddress = "0x88777bcCb752B20245400049021CB47b8fbCf640";
 
 const fireblocks = () => {
   const fireblocksApiKey = fs.readFileSync("./fireblocks_api_key", "utf-8").trim();
@@ -76,7 +74,7 @@ const fireblocks = () => {
 };
 
 (async () => {
-  // Initiate the contract and factory
+  // Initialize contract and factory objects
   const factoryContract = new ethers.Contract(factoryAddress, bitbondFactory.abi);
   const factory = new ethers.ContractFactory(tokenArtifact.abi, tokenArtifact.bytecode);
 
@@ -111,7 +109,7 @@ const fireblocks = () => {
       },
     },
     note: fireblocksParams.note,
-    amount: fireblocksParams.amount,
+    amount: "0", // Amount of native currency to send with the call
     extraParameters: {
       contractCallData: tx.data,
     },
