@@ -1,8 +1,6 @@
 import { FireblocksSDK, PeerType, TransactionOperation } from "fireblocks-sdk";
 import { ethers, PopulatedTransaction } from "ethers";
 import bitbondFactory from "../assets/CoinService.json";
-import { Deferrable } from "@ethersproject/properties";
-import type { ContractInterface, BytesLike, ContractFactory } from "ethers";
 import tokenArtifact from "../assets/FullFeatureToken.json";
 import fs from "fs";
 
@@ -78,9 +76,11 @@ const fireblocks = () => {
 };
 
 (async () => {
+  // Initiate the contract and factory
   const factoryContract = new ethers.Contract(factoryAddress, bitbondFactory.abi);
   const factory = new ethers.ContractFactory(tokenArtifact.abi, tokenArtifact.bytecode);
 
+  // Arrange the parameters for the token contract creation and get the bytecode
   const tokenParams = [
     token.name,
     token.symbol,
@@ -92,9 +92,11 @@ const fireblocks = () => {
     token.documentUri
   ];
   const bytecode = factory.getDeployTransaction(...tokenParams).data;
+  // Create a transaction object based on the bytecode
   const tx: PopulatedTransaction =
     await factoryContract.populateTransaction.deployContract(bytecode);
 
+  // Send the transaction to Fireblocks API
   const result = await fireblocks().createTransaction({
     operation: TransactionOperation.CONTRACT_CALL,
     assetId: fireblocksParams.assetId,
