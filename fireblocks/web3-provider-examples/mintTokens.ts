@@ -1,16 +1,18 @@
 import { FireblocksWeb3Provider, ChainId } from "@fireblocks/fireblocks-web3-provider";
 import { ethers } from "ethers";
 import fs from "fs";
-import tokenArtifact from "../assets/FullFeatureToken.json";
+import tokenArtifact from "../../assets/FullFeatureToken.json";
 
 // Edit the values below according to your needs
-// Details of the token to be burned
+// Details of the token to be minted
 const token = {
   contractAddress: "0x...",
   decimals: 18 // The number of decimals the token uses
 };
-// The amount of tokens to burn
+// The amount of tokens to mint
 const amount = "1.0";
+// The address which will receive the minted tokens
+const recipientAddress = "0x...";
 // Chain ID of the network to use
 const chainId = ChainId.POLYGON_TEST;
 // Vault account ID that will be used to sign the transaction
@@ -28,8 +30,8 @@ const eip1193Provider = new FireblocksWeb3Provider({
   const myContract = new ethers.Contract(token.contractAddress, tokenArtifact["abi"], provider.getSigner());
   const parsedAmount = ethers.utils.parseUnits(amount, token.decimals);
 
-  // Invoke the burn function
-  const tx = await myContract.burn(parsedAmount);
+  // Invoke the mint function
+  const tx = await myContract.mint(recipientAddress, parsedAmount);
 
   console.log(JSON.stringify(tx, null, 2));
 })().catch(error => {

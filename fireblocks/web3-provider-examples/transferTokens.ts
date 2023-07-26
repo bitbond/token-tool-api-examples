@@ -1,7 +1,7 @@
 import { FireblocksWeb3Provider, ChainId } from "@fireblocks/fireblocks-web3-provider";
 import { ethers } from "ethers";
 import fs from "fs";
-import tokenArtifact from "../assets/FullFeatureToken.json";
+import tokenArtifact from "../../assets/FullFeatureToken.json";
 
 // Edit the values below according to your needs
 // Details of the token to be transferred
