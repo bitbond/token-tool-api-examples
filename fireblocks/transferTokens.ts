@@ -4,28 +4,28 @@ import fs from "fs";
 import tokenArtifact from "../assets/FullFeatureToken.json";
 
 // Edit the values below according to your needs
-// Details of the token to be minted
+// Details of the token to be transferred
 const token = {
   contractAddress: "0x...",
   decimals: 18 // The number of decimals the token uses
 };
-// The amount of tokens to mint
+// The amount of tokens to transfer
 const amount = "1.0";
-// The address which will receive minted tokens
+// The address which will receive transferred tokens
 const recipientAddress = "0x...";
 
 const fireblocksParams = {
   // Vault ID that is used to sign the transaction,
-  // Could be any vault with enough balance to cover the transaction fee
+  // Could be any vault with enough balance to cover the transaction fee and owns the tokens
   vaultId: "0",
   // Determines the network where transaction is executed,
   // refer to Fireblocks documentation for other native asset codes
   assetId: "MATIC_POLYGON_MUMBAI",
   // Unique ID to ensure that the transaction is not run twice
   // https://developers.fireblocks.com/docs/creating-a-transaction#api-idempotency-best-practice
-  externalTxId: "01234",
+  externalTxId: "0123456",
   // Any string, will be visible in Fireblocks console
-  note: "Minting tokens",
+  note: "Tokens transfer",
 };
 
 const fireblocks = () => {
@@ -45,7 +45,7 @@ const fireblocks = () => {
   // Encode function and parameters to be used as calldata
   const parsedAmount = ethers.utils.parseUnits(amount, token.decimals);
   const calldata = contractInterface.encodeFunctionData(
-    "mint",
+    "transfer",
     [recipientAddress, parsedAmount]
   );
 
