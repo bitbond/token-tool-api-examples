@@ -56,6 +56,9 @@ const fireblocksParams = {
   // Determines the network where transaction is executed,
   // refer to Fireblocks documentation for other native asset codes
   assetId: "MATIC_POLYGON_MUMBAI",
+  // Unique ID to ensure that the transaction is not run twice
+  // https://developers.fireblocks.com/docs/creating-a-transaction#api-idempotency-best-practice
+  externalTxId: "0123",
   // Any string, will be visible in Fireblocks console
   note: `Deploying token ${token.symbol}`,
 };
@@ -110,6 +113,7 @@ const fireblocks = () => {
     },
     note: fireblocksParams.note,
     amount: "0", // Amount of native currency to send with the call
+    externalTxId: fireblocksParams.externalTxId,
     extraParameters: {
       contractCallData: tx.data,
     },
