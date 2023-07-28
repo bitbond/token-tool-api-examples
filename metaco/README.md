@@ -1,9 +1,8 @@
 # Bitbond Token Tool x Metaco Harmonize
-This repository contains a suite of script samples that demonstrate how to
+This directory contains a suite of script samples that demonstrate how to
 programmatically interact with Bitbond Token Tool contracts. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
 
 Metaco integration examples demonstrate how the key custody API can be utilized to execute transactions. The typical process involves invoking the contract call endpoint of Harmonize API and passing the calldata payload. This sequence facilitates the creation of a signed transaction that is prepared for transmission to the blockchain node. In the case of token deployment, the logic is executed by Token Tool smart contract, resulting in the deployment of the token.
-
 
 ## API / UI
 Examples below illustrate programatic mode of interaction that is best suited for large scale operations. The same actions at a smaller scale can be convinietly executed using either Token Tool UI connected to Harmonize through Wallet Connect, or Harmonize UI itself.
