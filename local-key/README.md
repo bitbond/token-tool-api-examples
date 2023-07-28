@@ -1,5 +1,3 @@
-![Bitbond logo](docs/bitbond-logo.png)
-
 # Bitbond Token Tool API examples
 This repository contains a suite of script samples that demonstrate how to
 programmatically interact with Bitbond Token Tool contracts. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.

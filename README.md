@@ -7,10 +7,10 @@ programmatically interact with Bitbond Token Tool contracts. Refer to [Token Too
 Contents by key custody provider:
 * [Fireblocks](./fireblocks/README.md)
 * [Metaco Harmonize](./metaco/README.md)
-* [Local key](./local-key/README.md)
+* [Local key](./local-key/README.md) (*basic illustration only*)
 
 The examples in this directory can be adapted to different key custody providers.
-Those scripts are intended as a simple illustration of interaction with smart contract's API, for production use we strongly advise employing a secure key custody solution. Please refer to the main README for examples covering enterprise-grade key custodians.
+Those scripts are intended as a simple illustration of interaction with smart contract's API, for production use we strongly advise employing a secure key custody solution.
 
 For example, key custody SDK can be utilized to execute transactions. For key custodians that do not offer a dedicated SDK, it is often possible to achieve similar outcomes by directly utilizing key custodian’s API. The typical process involves invoking the contract call endpoint of key custodian’s API and passing the calldata payload. This sequence facilitates the creation of a signed transaction that is prepared for transmission to the blockchain node, a step that numerous key custody providers automate. In the case of token deployment, the logic is executed by Token Tool smart contract, resulting in the deployment of the token.
 
