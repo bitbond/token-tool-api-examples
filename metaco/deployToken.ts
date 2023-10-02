@@ -1,10 +1,9 @@
 import { ethers, PopulatedTransaction } from "ethers";
 
-import bitbondFactory from "../assets/CoinService.json";
+import bitbondFactory from "../assets/BitbondFactory.json";
 import tokenArtifact from "../assets/FullFeatureToken.json";
 
-// Edit the values below according to your needs
-// New token configuration
+// New token configuration: edit values below according to your needs
 export const token = {
   name: "ABC-0 Token",
   symbol: "ABC-0",
@@ -37,6 +36,12 @@ export const token = {
     // Tokens can be force-transferred by the owner,
     // cannot be deactivated after creation
     _isForceTransferAllowed: false,
+    // If activated, the specified portion of a token transfer will go to the
+    // specified tax / fee wallet. Cannot be deactivated after initial token creation.
+    _isTaxable: false,
+    // If activated, the specified portion of a token will be burnt at each
+    // transfer. Cannot be deactivated after initial token creation.
+    _isDeflationary: false,
   },
   // If _isMaxAmountOfTokensSet is true,
   // this specifies the maximum number of tokens that an address can hold
@@ -44,6 +49,12 @@ export const token = {
   // If _isDocumentAllowed is true,
   // this specifies the document URI that can be updated by the owner
   documentUri: "",
+  // If _isTaxable is true, this specifies the address that will receive the tax
+  txTaxAddress: "0x0000000000000000000000000000000000000000",
+  // If _isTaxable is true, this specifies the tax amount in basis points
+  taxBPS: 0,
+  // If _isDeflationary is true, this specifies the burn rate in basis points
+  deflationBPS: 0,
 };
 
 (async () => {
@@ -61,7 +72,10 @@ export const token = {
     token.issuerAddress,
     token.flags,
     token.balanceLimit,
-    token.documentUri
+    token.documentUri,
+    token.txTaxAddress,
+    token.taxBPS,
+    token.deflationBPS,
   ];
   const bytecode = factory.getDeployTransaction(...tokenParams).data;
   // Create a transaction object based on the bytecode
