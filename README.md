@@ -2,11 +2,11 @@
 
 # Bitbond Token Tool API examples
 This repository contains a suite of script samples that demonstrate how to
-programmatically interact with Bitbond Token Tool contracts. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
+programmatically interact with Bitbond Token Tool contracts on **EVM chains**. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
 
 Contents by key custody provider:
 * [Fireblocks](./fireblocks/README.md)
-* [Metaco Harmonize](./metaco/README.md)
+* [Ripple Custody (formerly Metaco Harmonize)](./metaco/README.md)
 * [Local key](./local-key/README.md) (*basic illustration only*)
 
 The examples in this directory can be adapted to different key custody providers.
