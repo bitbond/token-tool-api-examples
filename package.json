@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@fireblocks/fireblocks-web3-provider": "^1.2.3",
+    "@solana/web3.js": "^1.98.4",
     "fireblocks-sdk": "^5.1.2",
     "web3": "^4.0.3"
   }
