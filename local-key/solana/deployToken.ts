@@ -134,7 +134,7 @@ async function uploadImageToPinata(imageFile: File): Promise<string> {
     throw new Error(`Pinata upload failed: ${pinataResponse.statusText}`);
   }
 
-  const pinataData: { IpfsHash: string } = await pinataResponse.json();
+  const pinataData = await pinataResponse.json() as { IpfsHash: string };
   return `https://gateway.pinata.cloud/ipfs/${pinataData.IpfsHash}`;
 }
 
@@ -187,14 +187,14 @@ async function buildAndExecuteTokenTransaction(
     );
   }
 
-  const apiData: {
+  const apiData = await apiResponse.json() as {
     data: {
       serializedTx: string;
       blockhash: string;
       lastValidBlockHeight: number;
       mintPublicKey: string;
     };
-  } = await apiResponse.json();
+  };
 
   const { serializedTx, blockhash, lastValidBlockHeight, mintPublicKey } =
     apiData.data;
@@ -257,7 +257,7 @@ async function createToken() {
     if (imageFile) {
       imageUrl = await uploadImageToPinata(imageFile);
     } else {
-      throw new Error(`Failed to load image file: ${IMAGE_FILE_NAME}`);
+      throw new Error(`Failed to load image file: ${String(IMAGE_FILE_NAME)}`);
     }
   } else if (IMAGE_URL && IMAGE_URL !== "") {
     imageUrl = IMAGE_URL;
@@ -297,7 +297,7 @@ async function createToken() {
 
   try {
     const result = await buildAndExecuteTokenTransaction(
-      formData as TokenData,
+      formData,
       connection,
       keypair
     );

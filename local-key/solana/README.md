@@ -5,23 +5,17 @@ This directory contains a script to programmatically create Solana SPL tokens us
 ## Requirements
 
 Recommended:
-- Node.js 18.16.0 or higher
-- npm 9.5.1 or higher
+- Node.js 22.11.0 or higher
+- yarn 1.22.0 or higher
 
 ## Setup
 
-1. Install [Node.js](https://nodejs.org/en) and [npm](https://npmjs.com).
+1. Install [Node.js](https://nodejs.org/en) and [yarn](https://yarnpkg.com).
    Exact installation steps depend on the platform, please refer to the documentation for instructions.
 
 2. Install node packages:
 ```bash
-npm install
-```
-
-3. Install required dependencies:
-```bash
-npm install @solana/web3.js bs58
-npm install --save-dev @types/bs58
+yarn install
 ```
 
 ## Deploying a new token
@@ -34,7 +28,7 @@ npm install --save-dev @types/bs58
 
 2. Run the deployment script:
 ```bash
-npx ts-node solana/deployToken.ts
+yarn tsx local-key/solana/deployToken.ts
 ```
 
 The script will create a new SPL token on Solana and output the transaction signature and mint address.
