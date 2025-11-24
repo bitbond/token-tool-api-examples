@@ -10,24 +10,24 @@ For example, key custody SDK can be utilized to execute transactions. For key cu
 The example uses TypeScript, but can also be converted to pure
 JavaScript by removing type definitions.
 
-Example token deployment: [Block explorer](https://mumbai.polygonscan.com/tx/0xd366367005e841cc97e0ffd02002114dfae41222559116b54f56298d45bf057d)
+Example token deployment: [Block explorer](https://sepolia.etherscan.io/tx/0xd7540a7025fc47dc4ebf3168b8de7384e613f71c3f6448b5af22767e9d4e938c)
 
 
 ## Requirements
 Recommended:
-- Node.js 18.16.0 or higher
-- npm 9.5.1 or higher
+- Node.js 22.11.0 or higher
+- yarn 1.22.0 or higher
 
 ## Setup
-1. Install [Node.js](https://nodejs.org/en) and [npm](https://npmjs.com).
+1. Install [Node.js](https://nodejs.org/en) and [yarn](https://yarnpkg.com).
 Exact installation steps depend on the platfrom, please refer to the documentation for instructions.
 1. Install node packages:
 ```
-npm install
+yarn install
 ```
 3. Copy private key into root directory of this repo. If you want to create a random wallet run:
 ```
-npx ts-node ./local-key/createWallet.ts
+yarn tsx ./local-key/evm/createWallet.ts
 ```
 Please refer to `private_key.example` file to verify that the format of the key
 matches values expected by the scripts.
@@ -36,32 +36,32 @@ matches values expected by the scripts.
 
 ### Deploying new token
 
-1. Customize configuration in `local-key/deployToken.ts`.
+1. Customize configuration in `local-key/evm/deployToken.ts`.
 1. To deploy the token run:
 ```
-npx ts-node ./local-key/deployToken.ts
+yarn tsx ./local-key/evm/deployToken.ts
 ```
 
 ### Transferring tokens
 
-1. Customize transfer parameters in `local-key/transferTokens.ts`.
+1. Customize transfer parameters in `local-key/evm/transferTokens.ts`.
 1. To transfer the tokens run:
 ```
-npx ts-node ./local-key/transferTokens.ts
+yarn tsx ./local-key/evm/transferTokens.ts
 ```
 
 ### Minting tokens
 
-1. Customize minting parameters in `local-key/mintTokens.ts`.
+1. Customize minting parameters in `local-key/evm/mintTokens.ts`.
 1. To mint the tokens run:
 ```
-npx ts-node ./local-key/mintTokens.ts
+yarn tsx ./local-key/evm/mintTokens.ts
 ```
 
 ### Burning tokens
 
-1. Customize burning parameters in `local-key/burnTokens.ts`.
+1. Customize burning parameters in `local-key/evm/burnTokens.ts`.
 1. To burn the tokens run:
 ```
-npx ts-node ./local-key/burnTokens.ts
+yarn tsx ./local-key/evm/burnTokens.ts
 ```
