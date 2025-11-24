@@ -17,16 +17,14 @@ Example token deployment: [Block explorer](https://sepolia.etherscan.io/tx/0xd75
 
 ## Requirements
 - Node.js 22.11.0 or higher
-- npm 10.0.0 or higher (or yarn)
+- yarn 1.22.0 or higher
 
 ## Setup
-1. Install [Node.js](https://nodejs.org/en) and [npm](https://npmjs.com) or [yarn](https://yarnpkg.com).
+1. Install [Node.js](https://nodejs.org/en) and [yarn](https://yarnpkg.com).
    Exact installation steps depend on the platform, please refer to the documentation for instructions.
 2. Install node packages:
 ```bash
 yarn install
-# or
-npm install
 ```
 3. Follow Harmonize setup instructions to create an API user.
 
@@ -42,7 +40,7 @@ npm install
 
 2. Generate the deployment transaction data:
 ```bash
-npx tsx metaco/evm/deployToken.ts
+yarn tsx metaco/evm/deployToken.ts
 ```
 
 3. The script will output:
@@ -66,7 +64,7 @@ npx tsx metaco/evm/deployToken.ts
 
 2. Generate the transfer calldata:
 ```bash
-npx tsx metaco/evm/transferTokens.ts
+yarn tsx metaco/evm/transferTokens.ts
 ```
 
 3. Use the output with Metaco Harmonize API:
@@ -84,7 +82,7 @@ npx tsx metaco/evm/transferTokens.ts
 
 2. Generate the mint calldata:
 ```bash
-npx tsx metaco/evm/mintTokens.ts
+yarn tsx metaco/evm/mintTokens.ts
 ```
 
 3. Use the output with Metaco Harmonize API:
@@ -101,7 +99,7 @@ npx tsx metaco/evm/mintTokens.ts
 
 2. Generate the burn calldata:
 ```bash
-npx tsx metaco/evm/burnTokens.ts
+yarn tsx metaco/evm/burnTokens.ts
 ```
 
 3. Use the output with Metaco Harmonize API:

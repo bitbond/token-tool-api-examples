@@ -25,7 +25,7 @@ Example token deployment: [Block explorer](https://sepolia.etherscan.io/tx/0xd75
 ## Requirements
 Recommended:
 - Node.js 22.11.0 or higher
-- npm 10.0.0 or higher (or yarn 1.22.0 or higher)
+- yarn 1.22.0 or higher
 
 ## Setup
 Please refer to relevant README depending on your key custodian of choice, or to `local-key` directory to get going with the most basic example with private key stored locally.
