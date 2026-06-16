@@ -41,6 +41,9 @@ matches values expected by the scripts.
 ```
 yarn tsx ./local-key/evm/deployToken.ts
 ```
+On success the script prints the deployed token address (parsed from the
+factory's `ContractDeployed` event). Keep it - you'll need it to verify the
+token (see below).
 
 ### Transferring tokens
 
@@ -65,3 +68,19 @@ yarn tsx ./local-key/evm/mintTokens.ts
 ```
 yarn tsx ./local-key/evm/burnTokens.ts
 ```
+
+### Verifying a deployed token
+
+Verification publishes the token's source code on the block explorer (e.g.
+Etherscan) so it shows up as "verified". You only need to provide the deployed
+token address - the script handles the verification request for you.
+
+1. Set `CONTRACT_ADDRESS` (the deployed token address printed by
+   `deployToken.ts`), `CHAIN_ID` and `contractName` in
+   `local-key/evm/verifyToken.ts`. The `contractName` must match the one used
+   when the token was deployed (see `deployToken.ts`).
+1. To verify the token run:
+```
+yarn tsx ./local-key/evm/verifyToken.ts
+```
+The script polls the block explorer until verification succeeds or fails.

@@ -76,7 +76,8 @@ const rpcUrl = "https://ethereum-sepolia-rpc.publicnode.com";
 
 // Factory ABI - only the deployContract function we need
 const FACTORY_ABI = [
-  "function deployContract(bytes calldata bytecode, bytes calldata signature, uint256 _salt, uint40 expiresAt) external returns (address)"
+  "function deployContract(bytes calldata bytecode, bytes calldata signature, uint256 _salt, uint40 expiresAt) external returns (address)",
+  "event ContractDeployed(address indexed contractAddress)"
 ];
 
 void (async () => {
@@ -136,6 +137,30 @@ void (async () => {
     console.log("Transaction confirmed!");
     console.log("Block number:", receipt?.blockNumber);
     console.log("Gas used:", receipt?.gasUsed.toString());
+
+    // Parse the deployed token address from the factory's ContractDeployed event.
+    // This is the address you pass to verifyToken.ts to verify the contract.
+    let deployedTokenAddress: string | undefined;
+    for (const log of receipt?.logs ?? []) {
+      try {
+        const parsed = factoryInterface.parseLog(log);
+        if (parsed?.name === "ContractDeployed") {
+          deployedTokenAddress = parsed.args.contractAddress as string;
+          break;
+        }
+      } catch {
+        // Not a factory log we recognize - skip it
+      }
+    }
+
+    if (deployedTokenAddress) {
+      console.log("Deployed token address:", deployedTokenAddress);
+    } else {
+      console.warn(
+        "Could not find ContractDeployed event in the transaction logs. " +
+          "Check the transaction on the block explorer for the token address."
+      );
+    }
   } catch (e: unknown) {
     console.error("Failed:", e);
   }
