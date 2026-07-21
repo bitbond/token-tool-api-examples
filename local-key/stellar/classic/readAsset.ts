@@ -1,4 +1,5 @@
-import { apiGet, ChainId } from "../../../common/stellarApi";
+import { apiGet } from "../../../common/stellarApi";
+import { CHAIN_ID, CODE, ISSUER_ADDRESS } from "../config";
 
 // ============================================================================
 // Read-only queries for a Classic asset. No signing, no fees.
@@ -6,10 +7,6 @@ import { apiGet, ChainId } from "../../../common/stellarApi";
 //   /classic/asset   - flags, total supply, holder count, lock status (no fan-out)
 //   /classic/holders - the holder list (a Horizon fan-out read; rate-limit it)
 // ============================================================================
-
-const CHAIN_ID: ChainId = "testnet";
-const CODE = "ABC";
-const ISSUER_ADDRESS = "G...";
 
 interface AssetInfo {
   exists: boolean;

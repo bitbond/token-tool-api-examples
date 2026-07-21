@@ -1,9 +1,9 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerTxUrl,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import { CHAIN_ID, CODE, ISSUER_ADDRESS } from "../config";
 
 // ============================================================================
 // Compliance / lifecycle management for a Classic asset. Pick an ACTION below.
@@ -17,11 +17,6 @@ import {
 //   lock-issuer                     - remove the issuer's signers to permanently
 //                                     fix the supply. Refused on a flagged issuer.
 // ============================================================================
-
-const CHAIN_ID: ChainId = "testnet";
-
-const CODE = "ABC";
-const ISSUER_ADDRESS = "G...";
 
 type ManageAction =
   | { kind: "authorization"; action: "authorize" | "freeze" | "unfreeze"; holders: string[] }

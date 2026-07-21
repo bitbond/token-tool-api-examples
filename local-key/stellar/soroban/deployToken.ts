@@ -1,30 +1,27 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerAccountUrl,
+  explorerContractUrl,
   explorerTxUrl,
   feeQuote,
+  getDeployedContractAddress,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import { ADMIN_ADDRESS, CHAIN_ID } from "../config";
 
 // ============================================================================
 // Deploy a SEP-41 (Soroban) token. Unlike a Classic asset, a SEP-41 token is a
 // single smart-contract deployment: one build -> sign -> submit -> poll cycle.
 //
-// The `address` (a G... account) becomes the token admin and signs the deploy.
-// The build endpoint simulates and prepares the contract call server-side and
-// embeds the service fee. The prepared footprint + resource fee go stale
-// quickly, so sign and submit promptly.
+// The admin (ADMIN_ADDRESS, a G... account) becomes the token owner and signs
+// the deploy. The build endpoint simulates and prepares the contract call
+// server-side and embeds the service fee. The prepared footprint + resource fee
+// go stale quickly, so sign and submit promptly.
 //
 // SEP-41 amounts (initialSupply, balanceLimit, ...) are raw base-unit integer
 // strings in the token's own decimals. For a 7-decimal token, a supply of 1000
 // tokens is "10000000000" (1000 * 10^7).
 // ============================================================================
-
-const CHAIN_ID: ChainId = "testnet";
-
-// The admin account (G...) that deploys and owns the token.
-const ADMIN_ADDRESS = "G...";
 
 const DECIMALS = 7;
 // Raw base-unit supply. Here: 1,000,000 tokens with DECIMALS decimals.
@@ -80,12 +77,18 @@ void (async () => {
       "deploy"
     );
 
+    // The deployed contract address is the deploy transaction's return value,
+    // read from Soroban RPC once the tx has confirmed.
+    const contractAddress = await getDeployedContractAddress(CHAIN_ID, hash);
+
     console.log(`\nToken ${TOKEN.symbol} deployed.`);
+    console.log(`Contract:  ${contractAddress}`);
+    console.log(`           ${explorerContractUrl(CHAIN_ID, contractAddress)}`);
     console.log(`Admin:     ${explorerAccountUrl(CHAIN_ID, ADMIN_ADDRESS)}`);
     console.log(`Deploy tx: ${explorerTxUrl(CHAIN_ID, hash)}`);
     console.log(
-      "\nOpen the deploy tx above and read the deployed contract (C...) address " +
-        "from it - you pass it as `tokenAddress` to the manage/distribute scripts."
+      `\nSet TOKEN_ADDRESS = "${contractAddress}" in local-key/stellar/config.ts ` +
+        "to use it from the manage/distribute scripts."
     );
   } catch (e: unknown) {
     console.error("Failed:", e);

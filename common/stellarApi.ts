@@ -1,5 +1,11 @@
 import fs from "fs";
-import { Keypair, Networks, TransactionBuilder } from "@stellar/stellar-sdk";
+import {
+  Keypair,
+  Networks,
+  rpc,
+  scValToNative,
+  TransactionBuilder,
+} from "@stellar/stellar-sdk";
 
 // ============================================================================
 // Shared helpers for the Bitbond Token Tool public Stellar API (`/api/v1`).
@@ -212,6 +218,47 @@ export async function buildSignSubmit(
   return { hash: built.hash, txKind: built.txKind, status };
 }
 
+// Public Soroban RPC endpoints, keyed by network. Override with SOROBAN_RPC_URL.
+// The Token Tool status endpoint only returns success|failed|pending, so reading
+// a deployed contract's address requires a direct Soroban RPC getTransaction.
+const SOROBAN_RPC_URL: Record<ChainId, string> = {
+  mainnet: "https://rpc.lightsail.network",
+  testnet: "https://soroban-testnet.stellar.org",
+};
+
+/**
+ * After a SEP-41 deploy confirms, fetch the deployed contract address (C...)
+ * from the transaction's return value via Soroban RPC. The deployer contract
+ * returns the new contract's address as the invocation result, which RPC
+ * surfaces as `returnValue`. Retries briefly because RPC may lag confirmation.
+ */
+export async function getDeployedContractAddress(
+  chainId: ChainId,
+  hash: string,
+  { intervalMs = 3000, timeoutMs = 60000 } = {}
+): Promise<string> {
+  const url = process.env.SOROBAN_RPC_URL ?? SOROBAN_RPC_URL[chainId];
+  const server = new rpc.Server(url, { allowHttp: url.startsWith("http://") });
+  const deadline = Date.now() + timeoutMs;
+  for (;;) {
+    const res = await server.getTransaction(hash);
+    if (res.status === rpc.Api.GetTransactionStatus.SUCCESS) {
+      if (!res.returnValue) {
+        throw new Error(`Transaction ${hash} has no return value`);
+      }
+      return scValToNative(res.returnValue) as string;
+    }
+    if (res.status === rpc.Api.GetTransactionStatus.FAILED) {
+      throw new Error(`Transaction ${hash} failed on-chain`);
+    }
+    // NOT_FOUND - RPC has not ingested it yet; wait and retry.
+    if (Date.now() >= deadline) {
+      throw new Error(`Timed out reading contract address for ${hash}`);
+    }
+    await sleep(intervalMs);
+  }
+}
+
 /** Price one or more operations before building. */
 export async function feeQuote(
   chainId: ChainId,
@@ -233,9 +280,14 @@ export function explorerTxUrl(chainId: ChainId, hash: string): string {
   return `${explorerBase(chainId)}/tx/${hash}`;
 }
 
-/** stellar.expert URL for an account (G...) or contract (C...) address. */
+/** stellar.expert URL for an account address (G...). */
 export function explorerAccountUrl(chainId: ChainId, address: string): string {
   return `${explorerBase(chainId)}/account/${address}`;
+}
+
+/** stellar.expert URL for a Soroban contract address (C...). */
+export function explorerContractUrl(chainId: ChainId, contract: string): string {
+  return `${explorerBase(chainId)}/contract/${contract}`;
 }
 
 /** stellar.expert URL for a Classic asset, identified as `code-issuer`. */

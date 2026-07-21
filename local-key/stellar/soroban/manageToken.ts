@@ -1,9 +1,9 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerTxUrl,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import { ADMIN_ADDRESS, CHAIN_ID, TOKEN_ADDRESS } from "../config";
 
 // ============================================================================
 // Manage a deployed SEP-41 (Soroban) token. Pick an ACTION below.
@@ -16,13 +16,8 @@ import {
 // SEP-41 amounts are raw base-unit integer strings in the token's own decimals.
 // ============================================================================
 
-const CHAIN_ID: ChainId = "testnet";
-
-// The deployed token contract address (C...).
-const TOKEN_ADDRESS = "C...";
-
 // The admin (G...) that signs management operations.
-const SIGNER_ADDRESS = "G...";
+const SIGNER_ADDRESS = ADMIN_ADDRESS;
 
 type ManageAction =
   | { kind: "mint"; receiver: string; amount: string }

@@ -61,6 +61,14 @@ Recommended:
    ```
    On **mainnet**, send XLM from an already-funded account.
 
+5. Fill in [`config.ts`](./config.ts) **once**. The shared account/asset
+   identifiers (`CHAIN_ID`, `CODE`, `ISSUER_ADDRESS`, `DISTRIBUTION_ADDRESS`,
+   `SUPPLY`, `ADMIN_ADDRESS`, `TOKEN_ADDRESS`) live here and every script reads
+   them, so you don't repeat them per file. Operation-specific knobs (compliance
+   flags, recipient lists, the chosen manage action, mint amounts) stay in the
+   individual scripts. Set `TOKEN_ADDRESS` after you deploy a SEP-41 token — the
+   deploy script prints it.
+
 ### Host configuration
 
 The scripts default to `https://tokentool.bitbond.com` (the Stellar app is served
@@ -72,7 +80,7 @@ deployment (e.g. a PR preview), set `TOKEN_TOOL_HOST`:
 TOKEN_TOOL_HOST="https://pr-123.pr.tokentool.bitbond.net" yarn tsx ./local-key/stellar/classic/createAsset.ts
 ```
 
-Every script has a `CHAIN_ID` constant at the top — `"testnet"` or `"mainnet"`.
+`CHAIN_ID` is set in [`config.ts`](./config.ts) — `"testnet"` or `"mainnet"`.
 
 ## Classic asset lifecycle (`classic/`)
 
@@ -81,7 +89,8 @@ A Classic asset is created in three ordered, separately-signed transactions:
 different accounts (an issuer cannot hold its own asset).
 
 ### Create an asset
-Customize `createAsset.ts` (code, addresses, supply, compliance flags), then:
+Set the shared values in `config.ts` and the compliance flags in `createAsset.ts`,
+then:
 ```bash
 yarn tsx ./local-key/stellar/classic/createAsset.ts
 ```
@@ -123,20 +132,22 @@ base-unit integer strings** in the token's own decimals (e.g. 1000 tokens of a
 7-decimal token is `"10000000000"`).
 
 ### Deploy a token
-Customize `deployToken.ts` (name, symbol, supply, capabilities), then:
+Set `ADMIN_ADDRESS` in `config.ts` and the token config in `deployToken.ts`
+(name, symbol, supply, capabilities), then:
 ```bash
 yarn tsx ./local-key/stellar/soroban/deployToken.ts
 ```
-The admin (`G...`) account becomes the token owner. After it lands, read the
-deployed contract address (`C...`) from the transaction on the explorer — you
-pass it as `tokenAddress` to the manage/distribute scripts.
+The admin (`G...`) account becomes the token owner. The script prints the
+deployed contract address (`C...`) — copy it into `TOKEN_ADDRESS` in `config.ts`
+for the manage/distribute scripts. (It reads the address from the deploy
+transaction via Soroban RPC; override the RPC with the `SOROBAN_RPC_URL` env var.)
 
 ### Manage (mint / burn / pause / blacklist / …)
 ```bash
 yarn tsx ./local-key/stellar/soroban/manageToken.ts
 ```
-Pick an `ACTION` in the file. Set `TOKEN_ADDRESS` (`C...`) and `SIGNER_ADDRESS`
-(the `G...` admin).
+Pick an `ACTION` in the file. `TOKEN_ADDRESS` and the admin signer come from
+`config.ts`.
 
 ### Distribute to holders
 ```bash

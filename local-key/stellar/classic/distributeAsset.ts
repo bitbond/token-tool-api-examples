@@ -1,9 +1,14 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerTxUrl,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import {
+  CHAIN_ID,
+  CODE,
+  DISTRIBUTION_ADDRESS,
+  ISSUER_ADDRESS,
+} from "../config";
 
 // ============================================================================
 // Distribute a Classic asset from the distribution account to many holders.
@@ -17,15 +22,13 @@ import {
 // rejected on the Classic rail). Each recipient must already trust the asset.
 // ============================================================================
 
-const CHAIN_ID: ChainId = "testnet";
-
-// The distribution account (G...) that holds and sends the asset.
-const SOURCE_ADDRESS = "G...";
+// The distribution account (G...) holds and sends the asset.
+const SOURCE_ADDRESS = DISTRIBUTION_ADDRESS;
 
 // The asset to distribute: either "native" (XLM) or an issued asset ref.
 const ASSET: "native" | { code: string; issuer: string } = {
-  code: "ABC",
-  issuer: "G...",
+  code: CODE,
+  issuer: ISSUER_ADDRESS,
 };
 
 // Recipients: destination (G...) + human-decimal amount (max 7 decimals).

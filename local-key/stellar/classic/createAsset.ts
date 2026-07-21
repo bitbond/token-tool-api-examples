@@ -1,12 +1,18 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerAccountUrl,
   explorerAssetUrl,
   explorerTxUrl,
   feeQuote,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import {
+  CHAIN_ID,
+  CODE,
+  DISTRIBUTION_ADDRESS,
+  ISSUER_ADDRESS,
+  SUPPLY,
+} from "../config";
 
 // ============================================================================
 // Create a Stellar *Classic* asset (a SEP-based issued asset on Horizon).
@@ -28,25 +34,9 @@ import {
 // with XLM (for reserves + fees) before running this script.
 // ============================================================================
 
-// ---------------------------------------------------------------------------
-// CONFIGURATION - edit these values
-// ---------------------------------------------------------------------------
-
-// "testnet" (Stellar test network) or "mainnet" (Stellar public network).
-const CHAIN_ID: ChainId = "testnet";
-
-// The asset code: 1-12 alphanumeric characters (e.g. "ABC", "GOLD").
-const CODE = "ABC";
-
-// The issuer account (G...). Its secret key signs the flags + issuance steps.
-const ISSUER_ADDRESS = "G...";
-
-// The distribution account (G...). Must differ from the issuer. Its secret key
-// signs the trustline step and receives the issued supply.
-const DISTRIBUTION_ADDRESS = "G...";
-
-// Total supply to mint, as a human-decimal string (max 7 decimal places).
-const SUPPLY = "1000000";
+// Account/asset identifiers (CHAIN_ID, CODE, ISSUER_ADDRESS,
+// DISTRIBUTION_ADDRESS, SUPPLY) come from ../config. The knobs below are
+// specific to creating an asset.
 
 // Compliance flags set on the issuer. Set at least one to true, otherwise this
 // asset needs no flags and you can skip straight to trustline + issuance below.

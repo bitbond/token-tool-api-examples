@@ -1,9 +1,14 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerTxUrl,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import {
+  CHAIN_ID,
+  CODE,
+  DISTRIBUTION_ADDRESS,
+  ISSUER_ADDRESS,
+} from "../config";
 
 // ============================================================================
 // Mint additional supply of an existing Classic asset to the distribution
@@ -12,12 +17,6 @@ import {
 //
 // Signed by the ISSUER. Zero-fee.
 // ============================================================================
-
-const CHAIN_ID: ChainId = "testnet";
-
-const CODE = "ABC";
-const ISSUER_ADDRESS = "G...";
-const DISTRIBUTION_ADDRESS = "G..."; // must differ from the issuer
 
 // Additional amount to mint, human-decimal string (max 7 decimal places).
 const AMOUNT = "5000";

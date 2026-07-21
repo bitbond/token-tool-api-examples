@@ -1,9 +1,9 @@
 import {
   buildSignSubmit,
-  ChainId,
   explorerTxUrl,
   loadSecretKey,
 } from "../../../common/stellarApi";
+import { ADMIN_ADDRESS, CHAIN_ID, TOKEN_ADDRESS } from "../config";
 
 // ============================================================================
 // Distribute a SEP-41 (Soroban) token to many recipients.
@@ -14,10 +14,8 @@ import {
 // contracts. Amounts are raw base-unit integer strings.
 // ============================================================================
 
-const CHAIN_ID: ChainId = "testnet";
-
-const TOKEN_ADDRESS = "C..."; // the deployed token contract
-const SIGNER_ADDRESS = "G..."; // the admin that holds and sends the tokens
+// The admin (G...) that holds and sends the tokens.
+const SIGNER_ADDRESS = ADMIN_ADDRESS;
 
 // destination: G... or C...; amount: raw base units; message: optional memo.
 const RECIPIENTS: Array<{ destination: string; amount: string; message?: string }> = [
