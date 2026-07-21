@@ -113,16 +113,19 @@ Token Tool manage page, with their wallet connected:
 <host>/stellar/manage-token/<CODE>-<ISSUER>?networkName=<chainId>
 ```
 This is the same "trustline invite" link the Token Tool app shares from its
-airdrop flow. `distributeAsset.ts` prints it for the asset being distributed;
-send it to any recipient that can't receive yet.
+airdrop flow. `distributeAsset.ts` probes recipients and prints it for the ones
+that need it (see below).
 
 ### Distribute to holders
 ```bash
 yarn tsx ./local-key/stellar/classic/distributeAsset.ts
 ```
 Sends the asset from the distribution account to a list of `G...` recipients.
-Each recipient must already trust the asset (see *Trustlines* above).
-Automatically chunks into ≤ 99 recipients per transaction.
+Before sending, it **probes each recipient's trustline** (via
+`/classic/account/held-assets`) and skips any that don't trust the asset yet,
+listing them with the invite link to share — the same exclusion the Token Tool
+app's airdrop flow applies. It then distributes to the eligible recipients,
+chunked into ≤ 99 per transaction.
 
 ### Manage (authorize / freeze / clawback / lock)
 ```bash

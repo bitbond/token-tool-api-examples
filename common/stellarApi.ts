@@ -273,6 +273,45 @@ export async function getDeployedContractAddress(
   }
 }
 
+interface HeldAsset {
+  assetId: string;
+  code: string;
+  issuer: string;
+  balance: string;
+  isNativeToken: boolean;
+}
+
+/**
+ * An account's Classic holdings (including native XLM). A trustline shows up
+ * here even at zero balance. An unfunded account yields `[]`, not an error.
+ */
+export async function heldAssets(
+  chainId: ChainId,
+  account: string
+): Promise<HeldAsset[]> {
+  const data = await apiGet<{ assets: HeldAsset[] }>(
+    "/classic/account/held-assets",
+    { chainId, account }
+  );
+  return data.assets;
+}
+
+/**
+ * Whether an account already trusts a Classic asset. A recipient must trust the
+ * asset before it can receive it, so probe this before distributing.
+ */
+export async function hasClassicTrustline(
+  chainId: ChainId,
+  account: string,
+  code: string,
+  issuer: string
+): Promise<boolean> {
+  const assets = await heldAssets(chainId, account);
+  return assets.some(
+    (a) => !a.isNativeToken && a.code === code && a.issuer === issuer
+  );
+}
+
 /** Price one or more operations before building. */
 export async function feeQuote(
   chainId: ChainId,

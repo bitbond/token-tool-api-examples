@@ -1,6 +1,7 @@
 import {
   buildSignSubmit,
   explorerTxUrl,
+  hasClassicTrustline,
   loadSecretKey,
   manageAssetUrl,
 } from "../../../common/stellarApi";
@@ -49,24 +50,48 @@ const SOURCE_SECRET = loadSecretKey("./local-key/stellar/distribution_secret_key
 
 void (async () => {
   try {
-    const chunks: Array<typeof RECIPIENTS> = [];
-    for (let i = 0; i < RECIPIENTS.length; i += MAX_PER_TX) {
-      chunks.push(RECIPIENTS.slice(i, i + MAX_PER_TX));
+    let recipients = RECIPIENTS;
+
+    // Pre-flight: an issued asset can only be received by an account that trusts
+    // it, so the build fails for any recipient without a trustline. Probe each
+    // recipient (native XLM needs no trustline) and split out the ones that
+    // can't receive yet - report them with the invite link and skip them, rather
+    // than letting a chunk fail mid-run. (This mirrors the Token Tool app's
+    // airdrop flow, which excludes no-trustline holders the same way.)
+    if (ASSET !== "native") {
+      const { code, issuer } = ASSET;
+      const probes = await Promise.all(
+        RECIPIENTS.map(async (r) => ({
+          recipient: r,
+          trusts: await hasClassicTrustline(CHAIN_ID, r.destination, code, issuer),
+        }))
+      );
+      recipients = probes.filter((p) => p.trusts).map((p) => p.recipient);
+      const missing = probes.filter((p) => !p.trusts).map((p) => p.recipient);
+
+      if (missing.length > 0) {
+        console.log(`\n${missing.length} recipient(s) do not trust ${code} yet - skipping:`);
+        for (const m of missing) console.log(`  ${m.destination}`);
+        console.log(
+          `Send them this link to add the trustline (wallet connected, ${CHAIN_ID} selected):\n  ` +
+            manageAssetUrl(CHAIN_ID, code, issuer)
+        );
+      }
+    }
+
+    if (recipients.length === 0) {
+      console.log("\nNo recipients can receive the asset yet - nothing to distribute.");
+      return;
+    }
+
+    const chunks: Array<typeof recipients> = [];
+    for (let i = 0; i < recipients.length; i += MAX_PER_TX) {
+      chunks.push(recipients.slice(i, i + MAX_PER_TX));
     }
 
     console.log(
-      `Distributing to ${RECIPIENTS.length} recipient(s) in ${chunks.length} transaction(s).`
+      `\nDistributing to ${recipients.length} recipient(s) in ${chunks.length} transaction(s).`
     );
-
-    // Recipients must trust the asset first (native XLM needs no trustline).
-    // Share this link with any recipient that cannot receive yet - they connect
-    // their wallet (with ${CHAIN_ID} selected) and add the trustline themselves.
-    if (ASSET !== "native") {
-      console.log(
-        `Recipients must trust ${ASSET.code} first. To add the trustline they open:\n  ` +
-          manageAssetUrl(CHAIN_ID, ASSET.code, ASSET.issuer)
-      );
-    }
 
     for (let i = 0; i < chunks.length; i++) {
       // Rebuild each chunk right before signing so the sequence number is fresh.
