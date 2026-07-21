@@ -1,6 +1,7 @@
 import {
   buildSignSubmit,
   ChainId,
+  explorerAccountUrl,
   explorerTxUrl,
   feeQuote,
   loadSecretKey,
@@ -79,11 +80,12 @@ void (async () => {
       "deploy"
     );
 
-    console.log(`\nToken ${TOKEN.symbol} deployed by ${ADMIN_ADDRESS}`);
-    console.log(explorerTxUrl(CHAIN_ID, hash));
+    console.log(`\nToken ${TOKEN.symbol} deployed.`);
+    console.log(`Admin:     ${explorerAccountUrl(CHAIN_ID, ADMIN_ADDRESS)}`);
+    console.log(`Deploy tx: ${explorerTxUrl(CHAIN_ID, hash)}`);
     console.log(
-      "Find the deployed contract (C...) address from the transaction on the " +
-        "explorer - you pass it as `tokenAddress` to the manage/distribute scripts."
+      "\nOpen the deploy tx above and read the deployed contract (C...) address " +
+        "from it - you pass it as `tokenAddress` to the manage/distribute scripts."
     );
   } catch (e: unknown) {
     console.error("Failed:", e);

@@ -1,6 +1,8 @@
 import {
   buildSignSubmit,
   ChainId,
+  explorerAccountUrl,
+  explorerAssetUrl,
   explorerTxUrl,
   feeQuote,
   loadSecretKey,
@@ -125,9 +127,11 @@ void (async () => {
       "issuance"
     );
 
-    console.log(`\nAsset ${CODE} created. Issuer: ${ISSUER_ADDRESS}`);
-    console.log(`Distribution: ${DISTRIBUTION_ADDRESS}, supply: ${SUPPLY}`);
-    console.log(`Issuance tx: ${explorerTxUrl(CHAIN_ID, issuance.hash)}`);
+    console.log(`\nAsset ${CODE} created (supply: ${SUPPLY}).`);
+    console.log(`Asset:        ${explorerAssetUrl(CHAIN_ID, CODE, ISSUER_ADDRESS)}`);
+    console.log(`Issuer:       ${explorerAccountUrl(CHAIN_ID, ISSUER_ADDRESS)}`);
+    console.log(`Distribution: ${explorerAccountUrl(CHAIN_ID, DISTRIBUTION_ADDRESS)}`);
+    console.log(`Issuance tx:  ${explorerTxUrl(CHAIN_ID, issuance.hash)}`);
   } catch (e: unknown) {
     console.error("Failed:", e);
     process.exitCode = 1;

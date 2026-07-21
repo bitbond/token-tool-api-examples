@@ -225,8 +225,24 @@ export async function feeQuote(
   return apiGet("/fee-quote", { chainId, services: services.join(",") });
 }
 
-/** Build the stellar.expert explorer URL for a transaction hash. */
+const explorerBase = (chainId: ChainId): string =>
+  `https://stellar.expert/explorer/${chainId === "mainnet" ? "public" : "testnet"}`;
+
+/** stellar.expert URL for a transaction hash. */
 export function explorerTxUrl(chainId: ChainId, hash: string): string {
-  const net = chainId === "mainnet" ? "public" : "testnet";
-  return `https://stellar.expert/explorer/${net}/tx/${hash}`;
+  return `${explorerBase(chainId)}/tx/${hash}`;
+}
+
+/** stellar.expert URL for an account (G...) or contract (C...) address. */
+export function explorerAccountUrl(chainId: ChainId, address: string): string {
+  return `${explorerBase(chainId)}/account/${address}`;
+}
+
+/** stellar.expert URL for a Classic asset, identified as `code-issuer`. */
+export function explorerAssetUrl(
+  chainId: ChainId,
+  code: string,
+  issuer: string
+): string {
+  return `${explorerBase(chainId)}/asset/${code}-${issuer}`;
 }
