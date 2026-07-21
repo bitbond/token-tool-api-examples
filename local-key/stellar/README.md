@@ -104,27 +104,25 @@ yarn tsx ./local-key/stellar/classic/mintAsset.ts
 Mints additional supply to the distribution account (only while the issuer is
 unlocked).
 
-### Add a trustline (so an account can receive the asset)
-A Classic payment fails unless the recipient already **trusts** the asset. A
-trustline is the holder's own action (their signature + XLM reserve), so you can
-only create one programmatically for accounts **you control** — e.g. test
-recipients you funded:
-```bash
-# put the holder's secret in local-key/stellar/holder_secret_key first
-yarn tsx ./local-key/stellar/classic/addTrustline.ts
+### Trustlines (recipients must trust the asset first)
+A Classic payment fails unless the recipient already **trusts** the asset, and a
+trustline needs the holder's own signature and XLM reserve — you cannot add one
+for an account whose key you don't hold. So the holder adds it themselves on the
+Token Tool manage page, with their wallet connected:
 ```
-In production you do **not** add trustlines for third parties — each holder
-adds their own via a Stellar wallet (e.g. Freighter) or the Bitbond Token Tool
-UI (`<host>/stellar` → manage / airdrop flow). This script is a testing
-convenience that reuses the create/trustline endpoint with the holder as the
-source.
+<host>/stellar/manage-token/<CODE>-<ISSUER>
+```
+`distributeAsset.ts` prints this link for the asset being distributed; share it
+with any recipient that can't receive yet. The network is taken from the
+holder's connected wallet, so make sure they have the right one (testnet/mainnet)
+selected.
 
 ### Distribute to holders
 ```bash
 yarn tsx ./local-key/stellar/classic/distributeAsset.ts
 ```
 Sends the asset from the distribution account to a list of `G...` recipients.
-Each recipient must already trust the asset (see *Add a trustline* above).
+Each recipient must already trust the asset (see *Trustlines* above).
 Automatically chunks into ≤ 99 recipients per transaction.
 
 ### Manage (authorize / freeze / clawback / lock)

@@ -121,9 +121,14 @@ export function loadSecretKey(path: string): string {
   return secret;
 }
 
-/** Derive the public account address (G...) from a secret key (S...). */
-export function accountAddress(secretKey: string): string {
-  return Keypair.fromSecret(secretKey).publicKey();
+/**
+ * Token Tool manage-token page for a Classic asset. A holder opens this, connects
+ * their wallet, and adds the trustline themselves - the only way to trust an
+ * asset for an account whose key you do not hold. The page resolves the network
+ * from the connected wallet, so it is not encoded in the URL.
+ */
+export function manageAssetUrl(code: string, issuer: string): string {
+  return `${HOST}/stellar/manage-token/${code}-${issuer}`;
 }
 
 /** POST a signed XDR to /submit. Returns 202 immediately with status pending. */
