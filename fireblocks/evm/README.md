@@ -24,6 +24,13 @@ yarn install
 3. Copy API user key and private key created with Fireblocks into root directory of this repo.
 Refer to `fireblocks_api_key.example` and `fireblocks_private_key.example` files to verify that
 the format of the key matches values expected by the scripts.
+4. Fill in `fireblocks/evm/config.ts` **once**. The shared network/token/vault
+identifiers (`CHAIN_ID`, `FACTORY_ADDRESS`, `ISSUER_ADDRESS`, `TOKEN_ADDRESS`,
+`TOKEN_DECIMALS`, `VAULT_ID`, `ASSET_ID`) and the Fireblocks client live here and
+every script reads them, so you don't repeat them per file. Set `TOKEN_ADDRESS`
+after you deploy a token — `deployToken.ts` prints it. Operation-specific knobs
+(token properties, recipients, amounts, the per-transaction note and
+externalTxId) stay in the individual scripts.
 
 ## Token lifecycle actions
 Two set of examples are given:
@@ -32,8 +39,8 @@ Two set of examples are given:
 
 ### Deploying new token
 
-1. Customize configuration in `fireblocks/evm/deployToken.ts`.
-1. Customize `fireblocks/evm/deployToken.ts` to select the vault and chain that will be used for the deployment.
+1. Select the vault and chain in `fireblocks/evm/config.ts` (`VAULT_ID`,
+   `ASSET_ID`, `CHAIN_ID`), then customize the token in `fireblocks/evm/deployToken.ts`.
 1. To deploy the token run:
 ```
 yarn tsx ./fireblocks/evm/deployToken.ts

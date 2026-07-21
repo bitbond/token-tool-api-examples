@@ -1,19 +1,16 @@
 import { ethers } from "ethers";
 import { EVMTokenData } from "../../common/types";
 import { prepareDeployTransaction } from "../../common/evmApi";
+import {
+  CHAIN_ID,
+  FACTORY_ADDRESS,
+  ISSUER_ADDRESS,
+  TOKEN_DECIMALS,
+} from "./config";
 
-// Edit the values below according to your needs
-const ISSUER_ADDRESS = "0x...";
-// Factory address for the network you are using
-// Address of the factory contract for the network you are using
-// Can be found in the Bitbond Token Tool documentation
-const FACTORY_ADDRESS = "0x4904Ba3148147D2f78b05a8446C01c48a7ABa4bd";
-// Chain ID for Ethereum Sepolia Testnet
-// Should be updated to the correct chain ID for the network you are using
-// Supported networks can be found in the Bitbond Token Tool documentation
-const CHAIN_ID = 11155111;
-
-// Token configuration: Edit values below according to your needs
+// Network/token identifiers (CHAIN_ID, FACTORY_ADDRESS, ISSUER_ADDRESS,
+// TOKEN_DECIMALS) come from ./config. The token configuration below is specific
+// to deploying an asset.
 const token: EVMTokenData = {
   // The name of the token
   tokenName: "ABC Token",
@@ -22,7 +19,7 @@ const token: EVMTokenData = {
   // The initial supply of tokens to be minted with token creation
   initialSupply: "100",
   // The number of decimals to be used by the token
-  decimals: "18",
+  decimals: TOKEN_DECIMALS.toString(),
   // The owner address of the token contract.
   // Set to issuer address or any other address that will own the contract after creation.
   owner: ISSUER_ADDRESS,
