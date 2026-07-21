@@ -50,17 +50,17 @@ void (async () => {
 
     switch (ACTION.kind) {
       case "authorization":
-        path = "/classic/manage/authorization/build";
+        path = "/classic/manage/authorization";
         body = { code: CODE, issuer: ISSUER_ADDRESS, holders: ACTION.holders, action: ACTION.action };
         label = `authorization:${ACTION.action}`;
         break;
       case "clawback":
-        path = "/classic/manage/clawback/build";
+        path = "/classic/manage/clawback";
         body = { code: CODE, issuer: ISSUER_ADDRESS, holder: ACTION.holder, amount: ACTION.amount };
         label = "clawback";
         break;
       case "lock-issuer":
-        path = "/classic/manage/lock-issuer/build";
+        path = "/classic/manage/lock-issuer";
         body = { issuer: ISSUER_ADDRESS };
         label = "lock-issuer";
         break;

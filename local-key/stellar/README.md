@@ -9,12 +9,12 @@ Two token standards are covered:
 - **Classic** — a SEP-based issued asset settled on Horizon (`classic/`).
 - **Soroban** — a SEP-41 smart-contract token (`soroban/`).
 
-The API is **non-custodial**: `*/build` endpoints return an *unsigned*
+The API is **non-custodial**: build endpoints return an *unsigned*
 transaction (base64 XDR) plus its final hash. You sign locally with your own key
 and post the signed XDR back to `/submit`. **No key material ever reaches the
 server.** Every state-changing operation follows the same four steps:
 
-1. **Build** — `POST` a `*/build` endpoint → `{ xdr, hash, txKind, feeStroops }`
+1. **Build** — `POST` a build endpoint → `{ xdr, hash, txKind, feeStroops }`
 2. **Sign** — sign the XDR locally with the source account's secret key
 3. **Submit** — `POST /submit` with the signed XDR → `202 { status: "pending" }`
 4. **Poll** — `GET /status/{hash}` until it resolves to `success` | `failed`
@@ -170,7 +170,7 @@ yarn tsx ./local-key/stellar/soroban/distributeToken.ts
 ```
 Sends the token to a list of recipients (`G...` or `C...`). SEP-41 distribution
 runs through a distribution contract that moves your tokens via `transfer_from`,
-so the script first sends a one-time **approval** (`/soroban/distribute/approve/build`)
+so the script first sends a one-time **approval** (`/soroban/distribute/approve`)
 letting that contract spend your tokens, then distributes — automatically chunked
 into ≤ 20 recipients per transaction.
 

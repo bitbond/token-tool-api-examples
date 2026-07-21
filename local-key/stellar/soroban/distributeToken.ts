@@ -49,7 +49,7 @@ void (async () => {
     // allowance); approving max covers every chunk in this run.
     await buildSignSubmit(
       CHAIN_ID,
-      "/soroban/distribute/approve/build",
+      "/soroban/distribute/approve",
       { signer: SIGNER_ADDRESS, tokenAddress: TOKEN_ADDRESS },
       SIGNER_SECRET,
       "approve"
@@ -59,7 +59,7 @@ void (async () => {
       // Rebuild each chunk right before signing so the prepared XDR is fresh.
       const result = await buildSignSubmit(
         CHAIN_ID,
-        "/soroban/distribute/build",
+        "/soroban/distribute",
         { signer: SIGNER_ADDRESS, tokenAddress: TOKEN_ADDRESS, recipients: chunks[i] },
         SIGNER_SECRET,
         `distribute chunk ${i + 1}/${chunks.length}`

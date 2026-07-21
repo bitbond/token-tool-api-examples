@@ -108,7 +108,7 @@ void (async () => {
       // Rebuild each chunk right before signing so the sequence number is fresh.
       const result = await buildSignSubmit(
         CHAIN_ID,
-        "/classic/distribute/build",
+        "/classic/distribute",
         { source: SOURCE_ADDRESS, asset: ASSET, recipients: chunks[i] },
         SOURCE_SECRET,
         `distribute chunk ${i + 1}/${chunks.length}`

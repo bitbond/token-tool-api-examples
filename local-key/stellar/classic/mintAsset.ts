@@ -27,7 +27,7 @@ void (async () => {
   try {
     const result = await buildSignSubmit(
       CHAIN_ID,
-      "/classic/manage/mint/build",
+      "/classic/manage/mint",
       {
         code: CODE,
         issuer: ISSUER_ADDRESS,

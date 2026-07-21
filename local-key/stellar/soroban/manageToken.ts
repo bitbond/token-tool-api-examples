@@ -48,27 +48,27 @@ void (async () => {
 
     switch (ACTION.kind) {
       case "mint":
-        path = "/soroban/manage/mint/build";
+        path = "/soroban/manage/mint";
         body = { ...base, receiver: ACTION.receiver, amount: ACTION.amount };
         break;
       case "burn":
-        path = "/soroban/manage/burn/build";
+        path = "/soroban/manage/burn";
         body = { ...base, amount: ACTION.amount };
         break;
       case "pause":
-        path = "/soroban/manage/pause/build";
+        path = "/soroban/manage/pause";
         body = { ...base, paused: ACTION.paused };
         break;
       case "blacklist":
-        path = "/soroban/manage/blacklist/build";
+        path = "/soroban/manage/blacklist";
         body = { ...base, address: ACTION.address, remove: ACTION.remove };
         break;
       case "change-owner":
-        path = "/soroban/manage/change-owner/build";
+        path = "/soroban/manage/change-owner";
         body = { ...base, newOwner: ACTION.newOwner };
         break;
       case "balance-limit":
-        path = "/soroban/manage/balance-limit/build";
+        path = "/soroban/manage/balance-limit";
         body = { ...base, balanceLimit: ACTION.balanceLimit };
         break;
     }

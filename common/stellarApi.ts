@@ -16,7 +16,7 @@ import {
 // POST the signed XDR back to `/submit`. No key material ever leaves this
 // machine. Every state-changing operation follows the same four steps:
 //
-//   1. Build  - POST a `*/build` endpoint -> { xdr, hash, txKind, feeStroops }
+//   1. Build  - POST a build endpoint -> { xdr, hash, txKind, feeStroops }
 //   2. Sign   - sign the XDR locally with the source account's secret key
 //   3. Submit - POST /submit with the signed XDR -> 202 { status: "pending" }
 //   4. Poll   - GET /status/{hash} until it resolves to success | failed
@@ -34,7 +34,7 @@ export type ChainId = "mainnet" | "testnet";
 // Transactions are routed by kind: Horizon for Classic, Soroban RPC otherwise.
 export type TxKind = "classic" | "soroban";
 
-// Shape returned by every `*/build` endpoint.
+// Shape returned by every build endpoint.
 export interface BuildResult {
   // Base64-encoded unsigned transaction envelope.
   xdr: string;

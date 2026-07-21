@@ -90,7 +90,7 @@ void (async () => {
     if (SET_FLAGS) {
       await buildSignSubmit(
         CHAIN_ID,
-        "/classic/create/flags/build",
+        "/classic/create/flags",
         { ...createBody, flags: FLAGS },
         ISSUER_SECRET,
         "flags"
@@ -102,7 +102,7 @@ void (async () => {
     // 2. Trustline (distribution-signed, zero-fee).
     await buildSignSubmit(
       CHAIN_ID,
-      "/classic/create/trustline/build",
+      "/classic/create/trustline",
       createBody,
       DISTRIBUTION_SECRET,
       "trustline"
@@ -111,7 +111,7 @@ void (async () => {
     // 3. Issuance (issuer-signed, fee-bearing).
     const issuance = await buildSignSubmit(
       CHAIN_ID,
-      "/classic/create/issuance/build",
+      "/classic/create/issuance",
       { ...createBody, supply: SUPPLY, lock: LOCK_SUPPLY },
       ISSUER_SECRET,
       "issuance"

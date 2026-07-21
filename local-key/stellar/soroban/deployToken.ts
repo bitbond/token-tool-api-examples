@@ -71,7 +71,7 @@ void (async () => {
 
     const { hash } = await buildSignSubmit(
       CHAIN_ID,
-      "/soroban/create/build",
+      "/soroban/create",
       TOKEN,
       ADMIN_SECRET,
       "deploy"
