@@ -121,6 +121,11 @@ export function loadSecretKey(path: string): string {
   return secret;
 }
 
+/** Derive the public account address (G...) from a secret key (S...). */
+export function accountAddress(secretKey: string): string {
+  return Keypair.fromSecret(secretKey).publicKey();
+}
+
 /** POST a signed XDR to /submit. Returns 202 immediately with status pending. */
 export async function submit(
   chainId: ChainId,
