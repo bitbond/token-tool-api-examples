@@ -4,6 +4,7 @@ import {
   Networks,
   rpc,
   scValToNative,
+  StrKey,
   TransactionBuilder,
 } from "@stellar/stellar-sdk";
 
@@ -119,6 +120,11 @@ export function loadSecretKey(path: string): string {
   // Throws if the seed is malformed - fail early rather than at submit time.
   Keypair.fromSecret(secret);
   return secret;
+}
+
+/** Whether a string is a valid Stellar account address (G...). */
+export function isValidAccount(address: string): boolean {
+  return StrKey.isValidEd25519PublicKey(address);
 }
 
 /**

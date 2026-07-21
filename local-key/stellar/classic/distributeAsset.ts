@@ -2,6 +2,7 @@ import {
   buildSignSubmit,
   explorerTxUrl,
   hasClassicTrustline,
+  isValidAccount,
   loadSecretKey,
   manageAssetUrl,
 } from "../../../common/stellarApi";
@@ -50,6 +51,16 @@ const SOURCE_SECRET = loadSecretKey("./local-key/stellar/distribution_secret_key
 
 void (async () => {
   try {
+    // Catch malformed destinations up front (e.g. a stray character) and name
+    // them, instead of an opaque 400 from the first probe/build.
+    const invalid = RECIPIENTS.filter((r) => !isValidAccount(r.destination));
+    if (invalid.length > 0) {
+      console.error("Invalid recipient address(es) - fix these and re-run:");
+      for (const r of invalid) console.error(`  ${r.destination}`);
+      process.exitCode = 1;
+      return;
+    }
+
     let recipients = RECIPIENTS;
 
     // Pre-flight: an issued asset can only be received by an account that trusts
