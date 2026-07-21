@@ -2,6 +2,7 @@ import {
   buildSignSubmit,
   explorerTxUrl,
   loadSecretKey,
+  manageAssetUrl,
 } from "../../../common/stellarApi";
 import { CHAIN_ID, CODE, ISSUER_ADDRESS } from "../config";
 
@@ -16,6 +17,11 @@ import { CHAIN_ID, CODE, ISSUER_ADDRESS } from "../config";
 //                                     the clawback flag).
 //   lock-issuer                     - remove the issuer's signers to permanently
 //                                     fix the supply. Refused on a flagged issuer.
+//
+// Holder-targeted actions require the holder to already trust the asset. The API
+// probes this and rejects the build naming any holder without a trustline, so we
+// don't pre-skip here - we just print the invite link (the holder adds their own
+// trustline; you cannot do it for them).
 // ============================================================================
 
 type ManageAction =
@@ -58,6 +64,16 @@ void (async () => {
         body = { issuer: ISSUER_ADDRESS };
         label = "lock-issuer";
         break;
+    }
+
+    // Holder-targeted actions fail (naming the holders) if a target does not
+    // trust the asset. Surface the invite link so you can send it to them.
+    if (ACTION.kind === "authorization" || ACTION.kind === "clawback") {
+      console.log(
+        `Targeted holders must already trust ${CODE}. If the build is rejected ` +
+          "for holders without a trustline, share this link so they can add it:\n  " +
+          manageAssetUrl(CHAIN_ID, CODE, ISSUER_ADDRESS)
+      );
     }
 
     const result = await buildSignSubmit(CHAIN_ID, path, body, ISSUER_SECRET, label);
