@@ -1,4 +1,3 @@
-import fs from "fs";
 import {
   buildSignSubmit,
   ChainId,
@@ -43,10 +42,7 @@ const ACTION = pick({
   holders: ["G..."], // up to 100 holders per transaction
 });
 
-const ISSUER_SECRET = loadSecretKey(
-  "./local-key/stellar/issuer_secret_key",
-  fs
-);
+const ISSUER_SECRET = loadSecretKey("./local-key/stellar/issuer_secret_key");
 
 void (async () => {
   try {

@@ -1,4 +1,3 @@
-import fs from "fs";
 import {
   buildSignSubmit,
   ChainId,
@@ -64,14 +63,8 @@ const LOCK_SUPPLY = false;
 
 // Secret keys (S...) read from files. See secret_key.example for the format.
 // The *_key filename suffix is gitignored - never commit real keys.
-const ISSUER_SECRET = loadSecretKey(
-  "./local-key/stellar/issuer_secret_key",
-  fs
-);
-const DISTRIBUTION_SECRET = loadSecretKey(
-  "./local-key/stellar/distribution_secret_key",
-  fs
-);
+const ISSUER_SECRET = loadSecretKey("./local-key/stellar/issuer_secret_key");
+const DISTRIBUTION_SECRET = loadSecretKey("./local-key/stellar/distribution_secret_key");
 
 // ---------------------------------------------------------------------------
 

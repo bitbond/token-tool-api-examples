@@ -1,3 +1,4 @@
+import fs from "fs";
 import { Keypair, Networks, TransactionBuilder } from "@stellar/stellar-sdk";
 
 // ============================================================================
@@ -107,7 +108,7 @@ export function signXdr(
 }
 
 /** Read a Stellar secret key (S...) from a file and validate it. */
-export function loadSecretKey(path: string, fs: typeof import("fs")): string {
+export function loadSecretKey(path: string): string {
   const secret = fs.readFileSync(path, "utf-8").trim();
   // Throws if the seed is malformed - fail early rather than at submit time.
   Keypair.fromSecret(secret);

@@ -1,4 +1,3 @@
-import fs from "fs";
 import {
   buildSignSubmit,
   ChainId,
@@ -23,10 +22,7 @@ const DISTRIBUTION_ADDRESS = "G..."; // must differ from the issuer
 // Additional amount to mint, human-decimal string (max 7 decimal places).
 const AMOUNT = "5000";
 
-const ISSUER_SECRET = loadSecretKey(
-  "./local-key/stellar/issuer_secret_key",
-  fs
-);
+const ISSUER_SECRET = loadSecretKey("./local-key/stellar/issuer_secret_key");
 
 void (async () => {
   try {

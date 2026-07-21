@@ -1,4 +1,3 @@
-import fs from "fs";
 import {
   buildSignSubmit,
   ChainId,
@@ -38,10 +37,7 @@ const RECIPIENTS: Array<{ destination: string; amount: string }> = [
 // Classic distribute allows up to 99 recipients per transaction.
 const MAX_PER_TX = 99;
 
-const SOURCE_SECRET = loadSecretKey(
-  "./local-key/stellar/distribution_secret_key",
-  fs
-);
+const SOURCE_SECRET = loadSecretKey("./local-key/stellar/distribution_secret_key");
 
 void (async () => {
   try {

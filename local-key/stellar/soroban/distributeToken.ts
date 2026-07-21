@@ -1,4 +1,3 @@
-import fs from "fs";
 import {
   buildSignSubmit,
   ChainId,
@@ -29,10 +28,7 @@ const RECIPIENTS: Array<{ destination: string; amount: string; message?: string 
 // SEP-41 distribute allows up to 20 recipients per transaction.
 const MAX_PER_TX = 20;
 
-const SIGNER_SECRET = loadSecretKey(
-  "./local-key/stellar/issuer_secret_key",
-  fs
-);
+const SIGNER_SECRET = loadSecretKey("./local-key/stellar/issuer_secret_key");
 
 void (async () => {
   try {

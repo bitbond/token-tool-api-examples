@@ -1,14 +1,9 @@
-import fs from "fs";
 import {
-  apiPost,
-  BuildResult,
+  buildSignSubmit,
   ChainId,
   explorerTxUrl,
   feeQuote,
   loadSecretKey,
-  pollStatus,
-  signXdr,
-  submit,
 } from "../../../common/stellarApi";
 
 // ============================================================================
@@ -67,10 +62,7 @@ const TOKEN = {
   deflationBPS: 0,
 };
 
-const ADMIN_SECRET = loadSecretKey(
-  "./local-key/stellar/issuer_secret_key",
-  fs
-);
+const ADMIN_SECRET = loadSecretKey("./local-key/stellar/issuer_secret_key");
 
 void (async () => {
   try {
@@ -80,33 +72,21 @@ void (async () => {
         (quote.enterprise ? " [enterprise]" : "")
     );
 
-    // Build (simulate + prepare + embed fee server-side).
-    console.log("\n[deploy] building...");
-    const built = await apiPost<BuildResult>("/soroban/create/build", {
-      chainId: CHAIN_ID,
-      ...TOKEN,
-    });
-    console.log(`[deploy] hash: ${built.hash} (fee ${built.feeStroops} stroops)`);
-
-    // Persist built.hash here BEFORE signing in a real integration. Sign + submit
-    // promptly - a prepared SEP-41 XDR goes stale as on-chain state moves.
-    const signed = signXdr(built.xdr, ADMIN_SECRET, CHAIN_ID);
-    console.log("[deploy] submitting...");
-    await submit(CHAIN_ID, signed);
-
-    const status = await pollStatus(CHAIN_ID, built.hash, built.txKind);
-    console.log(`[deploy] ${status}`);
-    if (status === "failed") throw new Error("Deployment failed on-chain.");
-    if (status === "pending") {
-      // Unresolved at poll timeout - it may still land. Do NOT re-sign; check the
-      // explorer for built.hash before treating the deploy as failed.
-      throw new Error(
-        `Deployment still pending - do NOT re-sign; check the explorer for ${built.hash}`
-      );
-    }
+    // Deploy is a single build -> sign -> submit -> poll cycle. The shared
+    // helper simulates + prepares + embeds the fee server-side, signs the
+    // prepared XDR promptly (a SEP-41 footprint goes stale as state moves), and
+    // enforces the submit/poll contract (throws on failed AND on an unresolved
+    // pending - do NOT re-sign; check the explorer for the reported hash).
+    const { hash } = await buildSignSubmit(
+      CHAIN_ID,
+      "/soroban/create/build",
+      TOKEN,
+      ADMIN_SECRET,
+      "deploy"
+    );
 
     console.log(`\nToken ${TOKEN.symbol} deployed by ${ADMIN_ADDRESS}`);
-    console.log(explorerTxUrl(CHAIN_ID, built.hash));
+    console.log(explorerTxUrl(CHAIN_ID, hash));
     console.log(
       "Find the deployed contract (C...) address from the transaction on the " +
         "explorer - you pass it as `tokenAddress` to the manage/distribute scripts."
