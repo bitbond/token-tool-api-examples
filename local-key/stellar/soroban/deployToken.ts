@@ -97,6 +97,13 @@ void (async () => {
     const status = await pollStatus(CHAIN_ID, built.hash, built.txKind);
     console.log(`[deploy] ${status}`);
     if (status === "failed") throw new Error("Deployment failed on-chain.");
+    if (status === "pending") {
+      // Unresolved at poll timeout - it may still land. Do NOT re-sign; check the
+      // explorer for built.hash before treating the deploy as failed.
+      throw new Error(
+        `Deployment still pending - do NOT re-sign; check the explorer for ${built.hash}`
+      );
+    }
 
     console.log(`\nToken ${TOKEN.symbol} deployed by ${ADMIN_ADDRESS}`);
     console.log(explorerTxUrl(CHAIN_ID, built.hash));

@@ -53,7 +53,16 @@ export class ApiError extends Error {
 }
 
 async function unwrap<T>(res: Response): Promise<T> {
-  const body = (await res.json()) as Envelope<T>;
+  // Error responses from the infra layer (proxy/CDN/gateway rate-limit 429,
+  // upstream-unreachable 503/502) are not JSON envelopes, so res.json() would
+  // throw and lose the status. Fall back to the HTTP status when parsing fails
+  // so callers can still classify retryability from ApiError.status.
+  let body: Envelope<T>;
+  try {
+    body = (await res.json()) as Envelope<T>;
+  } catch {
+    throw new ApiError(res.status, `Request failed with HTTP ${res.status}`);
+  }
   if (!body.success) {
     // Guard refusals and validation failures come back as errors[0].title - a
     // human-readable sentence, not a stable error code. Branch on `status`.
@@ -158,9 +167,11 @@ export async function pollStatus(
 
 /**
  * The full lifecycle for one state-changing operation: build -> sign -> submit
- * -> poll. Returns the final hash and status. Throws on a `failed` outcome so
- * callers running a multi-step sequence stop instead of proceeding on a step
- * that did not land.
+ * -> poll. Returns only once the transaction has confirmed `success`. Throws on
+ * a `failed` outcome AND on an unresolved `pending` (poll timeout) so callers
+ * running a multi-step sequence never proceed to a dependent step against state
+ * that has not landed yet. On the thrown `pending`, do NOT re-sign - check the
+ * explorer for the reported hash first.
  */
 export async function buildSignSubmit(
   chainId: ChainId,
@@ -168,7 +179,7 @@ export async function buildSignSubmit(
   buildBody: Record<string, unknown>,
   secretKey: string,
   label: string
-): Promise<{ hash: string; txKind: TxKind; status: "success" | "pending" }> {
+): Promise<{ hash: string; txKind: TxKind; status: "success" }> {
   console.log(`\n[${label}] building...`);
   const built = await apiPost<BuildResult>(buildPath, { chainId, ...buildBody });
   console.log(`[${label}] hash: ${built.hash}`);
@@ -187,6 +198,14 @@ export async function buildSignSubmit(
   const status = await pollStatus(chainId, built.hash, built.txKind);
   if (status === "failed") {
     throw new ApiError(422, `[${label}] transaction failed on-chain`);
+  }
+  if (status === "pending") {
+    // Unresolved at poll timeout - it may still land. Stop the sequence rather
+    // than build a dependent step against state that has not confirmed.
+    throw new ApiError(
+      408,
+      `[${label}] still pending after poll timeout - do NOT re-sign; check the explorer for ${built.hash}`
+    );
   }
   console.log(`[${label}] ${status}`);
   return { hash: built.hash, txKind: built.txKind, status };

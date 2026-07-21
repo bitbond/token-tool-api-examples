@@ -77,7 +77,17 @@ const DISTRIBUTION_SECRET = loadSecretKey(
 
 void (async () => {
   try {
-    const asset = { code: CODE, issuer: ISSUER_ADDRESS };
+    // A flagged issuer refuses the lock, so locking supply is incompatible with
+    // setting compliance flags. Fail loudly rather than silently leaving the
+    // supply unlocked when both are requested.
+    if (LOCK_SUPPLY && SET_FLAGS) {
+      throw new Error(
+        "LOCK_SUPPLY cannot be combined with compliance FLAGS - a flagged " +
+          "issuer refuses the lock. Set LOCK_SUPPLY to false, or clear the " +
+          "flags and lock separately later via manageAsset.ts (lock-issuer)."
+      );
+    }
+
     const createBody = {
       code: CODE,
       issuer: ISSUER_ADDRESS,
@@ -118,7 +128,7 @@ void (async () => {
     const issuance = await buildSignSubmit(
       CHAIN_ID,
       "/classic/create/issuance/build",
-      { ...createBody, supply: SUPPLY, lock: LOCK_SUPPLY && !SET_FLAGS },
+      { ...createBody, supply: SUPPLY, lock: LOCK_SUPPLY },
       ISSUER_SECRET,
       "issuance"
     );
@@ -126,7 +136,6 @@ void (async () => {
     console.log(`\nAsset ${CODE} created. Issuer: ${ISSUER_ADDRESS}`);
     console.log(`Distribution: ${DISTRIBUTION_ADDRESS}, supply: ${SUPPLY}`);
     console.log(`Issuance tx: ${explorerTxUrl(CHAIN_ID, issuance.hash)}`);
-    void asset;
   } catch (e: unknown) {
     console.error("Failed:", e);
     process.exitCode = 1;
