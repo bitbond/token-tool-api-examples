@@ -12,6 +12,11 @@ import { ADMIN_ADDRESS, CHAIN_ID, TOKEN_ADDRESS } from "../config";
 // recipients per transaction - larger runs are chunked, each built -> signed ->
 // submitted -> polled in turn. SEP-41 destinations may be G... accounts OR C...
 // contracts. Amounts are raw base-unit integer strings.
+//
+// Distribution runs through a distribution contract that moves the signer's
+// tokens with transfer_from, so a one-time approval must land first: the signer
+// approves the distribution contract as a spender. This script sends that
+// approval before the distribute chunks (one approval covers the whole run).
 // ============================================================================
 
 // The admin (G...) that holds and sends the tokens.
@@ -37,6 +42,17 @@ void (async () => {
 
     console.log(
       `Distributing to ${RECIPIENTS.length} recipient(s) in ${chunks.length} transaction(s).`
+    );
+
+    // Approve the distribution contract to move the signer's tokens. Required
+    // once before distributing (the distribute build's transfer_from needs an
+    // allowance); approving max covers every chunk in this run.
+    await buildSignSubmit(
+      CHAIN_ID,
+      "/soroban/distribute/approve/build",
+      { signer: SIGNER_ADDRESS, tokenAddress: TOKEN_ADDRESS },
+      SIGNER_SECRET,
+      "approve"
     );
 
     for (let i = 0; i < chunks.length; i++) {

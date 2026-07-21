@@ -168,7 +168,10 @@ Pick an `ACTION` in the file. `TOKEN_ADDRESS` and the admin signer come from
 ```bash
 yarn tsx ./local-key/stellar/soroban/distributeToken.ts
 ```
-Sends the token to a list of recipients (`G...` or `C...`). Automatically chunks
+Sends the token to a list of recipients (`G...` or `C...`). SEP-41 distribution
+runs through a distribution contract that moves your tokens via `transfer_from`,
+so the script first sends a one-time **approval** (`/soroban/distribute/approve/build`)
+letting that contract spend your tokens, then distributes — automatically chunked
 into ≤ 20 recipients per transaction.
 
 ## API limits
