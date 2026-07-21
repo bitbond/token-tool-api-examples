@@ -116,8 +116,7 @@ void (async () => {
       "trustline"
     );
 
-    // 3. Issuance (issuer-signed, fee-bearing). A flagged issuer cannot lock -
-    // LOCK_SUPPLY must be false when any compliance flag is set.
+    // 3. Issuance (issuer-signed, fee-bearing).
     const issuance = await buildSignSubmit(
       CHAIN_ID,
       "/classic/create/issuance/build",

@@ -44,7 +44,6 @@ const TOKEN = {
   forceTransferEnabled: false,
   whitelistEnabled: false,
 
-  // Optional document URI.
   hasDocumentUri: false,
   documentUri: "",
 
@@ -72,11 +71,6 @@ void (async () => {
         (quote.enterprise ? " [enterprise]" : "")
     );
 
-    // Deploy is a single build -> sign -> submit -> poll cycle. The shared
-    // helper simulates + prepares + embeds the fee server-side, signs the
-    // prepared XDR promptly (a SEP-41 footprint goes stale as state moves), and
-    // enforces the submit/poll contract (throws on failed AND on an unresolved
-    // pending - do NOT re-sign; check the explorer for the reported hash).
     const { hash } = await buildSignSubmit(
       CHAIN_ID,
       "/soroban/create/build",

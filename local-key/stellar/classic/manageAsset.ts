@@ -32,10 +32,7 @@ type ManageAction =
 // stays reachable) instead of narrowing to the one variant assigned below.
 const pick = (a: ManageAction): ManageAction => a;
 
-// Choose one:
-//   { kind: "authorization", action: "authorize" | "freeze" | "unfreeze", holders }
-//   { kind: "clawback", holder, amount }
-//   { kind: "lock-issuer" }
+// Choose one action (see the ManageAction variants above).
 const ACTION = pick({
   kind: "authorization",
   action: "authorize",
