@@ -122,13 +122,17 @@ export function loadSecretKey(path: string): string {
 }
 
 /**
- * Token Tool manage-token page for a Classic asset. A holder opens this, connects
- * their wallet, and adds the trustline themselves - the only way to trust an
- * asset for an account whose key you do not hold. The page resolves the network
- * from the connected wallet, so it is not encoded in the URL.
+ * Token Tool manage-token page for a Classic asset (the app's "trustline invite"
+ * link). A holder opens this, connects their wallet, and adds the trustline
+ * themselves - the only way to trust an asset for an account whose key you do
+ * not hold. `networkName` preselects the right network on the page.
  */
-export function manageAssetUrl(code: string, issuer: string): string {
-  return `${HOST}/stellar/manage-token/${code}-${issuer}`;
+export function manageAssetUrl(
+  chainId: ChainId,
+  code: string,
+  issuer: string
+): string {
+  return `${HOST}/stellar/manage-token/${code}-${issuer}?networkName=${chainId}`;
 }
 
 /** POST a signed XDR to /submit. Returns 202 immediately with status pending. */

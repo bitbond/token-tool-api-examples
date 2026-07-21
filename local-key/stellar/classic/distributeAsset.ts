@@ -64,7 +64,7 @@ void (async () => {
     if (ASSET !== "native") {
       console.log(
         `Recipients must trust ${ASSET.code} first. To add the trustline they open:\n  ` +
-          manageAssetUrl(ASSET.code, ASSET.issuer)
+          manageAssetUrl(CHAIN_ID, ASSET.code, ASSET.issuer)
       );
     }
 

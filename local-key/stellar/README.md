@@ -110,12 +110,11 @@ trustline needs the holder's own signature and XLM reserve — you cannot add on
 for an account whose key you don't hold. So the holder adds it themselves on the
 Token Tool manage page, with their wallet connected:
 ```
-<host>/stellar/manage-token/<CODE>-<ISSUER>
+<host>/stellar/manage-token/<CODE>-<ISSUER>?networkName=<chainId>
 ```
-`distributeAsset.ts` prints this link for the asset being distributed; share it
-with any recipient that can't receive yet. The network is taken from the
-holder's connected wallet, so make sure they have the right one (testnet/mainnet)
-selected.
+This is the same "trustline invite" link the Token Tool app shares from its
+airdrop flow. `distributeAsset.ts` prints it for the asset being distributed;
+send it to any recipient that can't receive yet.
 
 ### Distribute to holders
 ```bash
