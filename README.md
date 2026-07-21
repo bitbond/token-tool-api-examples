@@ -9,6 +9,7 @@ Contents by key custody provider:
 * [Ripple Custody (formerly Metaco Harmonize)](./metaco/evm/README.md)
 * [Local key](./local-key/evm/README.md) (*basic illustration only*)
 * [Solana (Local key)](./local-key/solana/README.md) (*basic illustration only*)
+* [Stellar — Classic & Soroban (Local key)](./local-key/stellar/README.md) (*basic illustration only*)
 
 The examples in this directory can be adapted to different key custody providers.
 Those scripts are intended as a simple illustration of interaction with smart contract's API, for production use we strongly advise employing a secure key custody solution.
