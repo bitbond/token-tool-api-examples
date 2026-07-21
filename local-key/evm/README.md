@@ -31,6 +31,13 @@ yarn tsx ./local-key/evm/createWallet.ts
 ```
 Please refer to `private_key.example` file to verify that the format of the key
 matches values expected by the scripts.
+4. Fill in `local-key/evm/config.ts` **once**. The shared network/token
+identifiers (`CHAIN_ID`, `RPC_URL`, `FACTORY_ADDRESS`, `ISSUER_ADDRESS`,
+`TOKEN_ADDRESS`, `TOKEN_DECIMALS`, `PRIVATE_KEY_PATH`) live here and every
+script reads them, so you don't repeat them per file. Set `TOKEN_ADDRESS` after
+you deploy a token — `deployToken.ts` prints it. Operation-specific knobs (token
+properties, recipients, mint/burn/transfer amounts) stay in the individual
+scripts.
 
 ## Token lifecycle actions
 
@@ -75,8 +82,8 @@ Verification publishes the token's source code on the block explorer (e.g.
 Etherscan) so it shows up as "verified". You only need to provide the deployed
 token address - the script handles the verification request for you.
 
-1. Set `CONTRACT_ADDRESS` (the deployed token address printed by
-   `deployToken.ts`), `CHAIN_ID` and `contractName` in
+1. Set `TOKEN_ADDRESS` (the deployed token address printed by `deployToken.ts`)
+   and `CHAIN_ID` in `config.ts`, and `contractName` in
    `local-key/evm/verifyToken.ts`. The `contractName` must match the one used
    when the token was deployed (see `deployToken.ts`).
 1. To verify the token run:

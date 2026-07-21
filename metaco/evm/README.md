@@ -27,14 +27,18 @@ Example token deployment: [Block explorer](https://sepolia.etherscan.io/tx/0xd75
 yarn install
 ```
 3. Follow Harmonize setup instructions to create an API user.
+4. Fill in `metaco/evm/config.ts` **once**. The shared network/token identifiers
+   (`CHAIN_ID`, `FACTORY_ADDRESS`, `ISSUER_ADDRESS`, `TOKEN_DECIMALS`) live here
+   and every script reads them, so you don't repeat them per file.
+   Operation-specific knobs (token properties, recipients, amounts) stay in the
+   individual scripts.
 
 ## Token lifecycle actions
 
 ### Deploying new token
 
-1. Customize configuration in `deployToken.ts`:
-   - Set `ISSUER_ADDRESS` to your wallet address
-   - Configure `CHAIN_ID` for your target network (e.g., 11155111 for Sepolia)
+1. Set `ISSUER_ADDRESS` and `CHAIN_ID` (e.g., 11155111 for Sepolia) in
+   `config.ts`, then customize the token in `deployToken.ts`:
    - Update token parameters (name, symbol, supply, etc.)
    - Set token properties (mintable, burnable, pausable, etc.)
 
@@ -59,7 +63,6 @@ yarn tsx metaco/evm/deployToken.ts
 
 1. Customize transfer parameters in `transferTokens.ts`:
    - Set `AMOUNT_TO_TRANSFER` to the amount of tokens to send
-   - Set `TOKEN_DECIMALS` to match your token's decimals
    - Set `RECIPIENT_ADDRESS` to the destination address
 
 2. Generate the transfer calldata:
@@ -76,9 +79,7 @@ yarn tsx metaco/evm/transferTokens.ts
 ### Minting tokens
 
 1. Customize minting parameters in `mintTokens.ts`:
-   - Set `AMOUNT_TO_MINT` to the amount of tokens to mint
-   - Set `TOKEN_DECIMALS` to match your token's decimals
-   - Set `RECIPIENT_ADDRESS` to the address receiving the tokens
+   - Set `AMOUNT_TO_MINT` to the amount of tokens to mint   - Set `RECIPIENT_ADDRESS` to the address receiving the tokens
 
 2. Generate the mint calldata:
 ```bash
@@ -95,8 +96,6 @@ yarn tsx metaco/evm/mintTokens.ts
 
 1. Customize burning parameters in `burnTokens.ts`:
    - Set `AMOUNT_TO_BURN` to the amount of tokens to burn
-   - Set `TOKEN_DECIMALS` to match your token's decimals
-
 2. Generate the burn calldata:
 ```bash
 yarn tsx metaco/evm/burnTokens.ts

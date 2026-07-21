@@ -1,22 +1,20 @@
-import { BasePath, Fireblocks, TransactionOperation, TransferPeerPathType } from "@fireblocks/ts-sdk";
+import { TransactionOperation, TransferPeerPathType } from "@fireblocks/ts-sdk";
 import { ethers } from "ethers";
-import fs from "fs";
 import { EVMTokenData } from "../../common/types";
 import { prepareDeployTransaction } from "../../common/evmApi";
+import {
+  ASSET_ID,
+  CHAIN_ID,
+  FACTORY_ADDRESS,
+  fireblocksClient,
+  ISSUER_ADDRESS,
+  TOKEN_DECIMALS,
+  VAULT_ID,
+} from "./config";
 
-// Edit the values below according to your needs
-// Fireblocks vault account address
-const ISSUER_ADDRESS = "0x...";
-// Factory address for the network you are using
-// Address of the factory contract for the network you are using
-// Can be found in the Bitbond Token Tool documentation
-const FACTORY_ADDRESS = "0x4904Ba3148147D2f78b05a8446C01c48a7ABa4bd";
-// Chain ID for Ethereum Sepolia Testnet
-// Should be updated to the correct chain ID for the network you are using
-// Supported networks can be found in the Bitbond Token Tool documentation
-const CHAIN_ID = 11155111;
-
-// Token configuration: Edit values below according to your needs
+// Network/token/vault identifiers (CHAIN_ID, FACTORY_ADDRESS, ISSUER_ADDRESS,
+// TOKEN_DECIMALS, VAULT_ID, ASSET_ID) come from ./config. The token
+// configuration below is specific to deploying an asset.
 const token: EVMTokenData = {
   // The name of the token
   tokenName: "ABC Token",
@@ -25,7 +23,7 @@ const token: EVMTokenData = {
   // The initial supply of tokens to be minted with token creation
   initialSupply: "100",
   // The number of decimals to be used by the token
-  decimals: "18",
+  decimals: TOKEN_DECIMALS.toString(),
   // The owner address of the token contract.
   // Set to issuer address or any other address that will own the contract after creation.
   owner: ISSUER_ADDRESS,
@@ -71,12 +69,6 @@ const token: EVMTokenData = {
 };
 
 const fireblocksParams = {
-  // Vault ID that is used to sign the transaction,
-  // Could be any vault with enough balance to cover the transaction fee that owns the tokens
-  vaultId: "0",
-  // Determines the network where transaction is executed,
-  // refer to Fireblocks documentation for other native asset codes
-  assetId: "ETH_TEST5",
   // Unique ID to ensure that the transaction is not run twice
   // https://developers.fireblocks.com/docs/creating-a-transaction#api-idempotency-best-practice
   externalTxId: "012345",
@@ -91,11 +83,7 @@ const FACTORY_ABI = [
   "function deployContract(bytes calldata bytecode, bytes calldata signature, uint256 _salt, uint40 expiresAt) external returns (address)"
 ];
 
-const fireblocks = new Fireblocks({
-  apiKey: fs.readFileSync("./fireblocks/evm/fireblocks_api_key", "utf-8").trim(),
-  basePath: BasePath.EU,
-  secretKey: fs.readFileSync("./fireblocks/evm/fireblocks_private_key", "utf-8").trim()
-});
+const fireblocks = fireblocksClient();
 
 void (async () => {
   try {
@@ -136,10 +124,10 @@ void (async () => {
     const result = await fireblocks.transactions.createTransaction({
       transactionRequest: {
         operation: TransactionOperation.ContractCall,
-        assetId: fireblocksParams.assetId,
+        assetId: ASSET_ID,
         source: {
           type: TransferPeerPathType.VaultAccount,
-          id: fireblocksParams.vaultId,
+          id: VAULT_ID,
         },
         destination: {
           type: TransferPeerPathType.OneTimeAddress,

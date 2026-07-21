@@ -1,4 +1,5 @@
 node_modules/
+dist/
 
 # Tooling
 .DS_Store
