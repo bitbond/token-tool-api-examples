@@ -1,10 +1,9 @@
 import { ethers } from "ethers";
+import { TOKEN_DECIMALS } from "./config";
 
-// Edit the values below according to your needs
+// TOKEN_DECIMALS comes from ./config. The knob below is specific to burning.
 // The amount of tokens to be burned
 const AMOUNT_TO_BURN = "1.0";
-// The number of decimals the token uses
-const TOKEN_DECIMALS = 18;
 
 const BURN_ABI = [
   "function burn(uint256 amount) external",

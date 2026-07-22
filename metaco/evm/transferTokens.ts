@@ -1,10 +1,9 @@
 import { ethers } from "ethers";
+import { TOKEN_DECIMALS } from "./config";
 
-// Edit the values below according to your needs
+// TOKEN_DECIMALS comes from ./config. The knobs below are specific to transferring.
 // The amount of tokens to be sent
 const AMOUNT_TO_TRANSFER = "1.0";
-// The number of decimals the token uses
-const TOKEN_DECIMALS = 18;
 // The address the tokens will be transferred to
 const RECIPIENT_ADDRESS = "0x...";
 

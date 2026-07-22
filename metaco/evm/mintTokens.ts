@@ -1,10 +1,9 @@
 import { ethers } from "ethers";
+import { TOKEN_DECIMALS } from "./config";
 
-// Edit the values below according to your needs
+// TOKEN_DECIMALS comes from ./config. The knobs below are specific to minting.
 // The amount of tokens to be minted
 const AMOUNT_TO_MINT = "3.0";
-// The number of decimals the token uses
-const TOKEN_DECIMALS = 18;
 // The address the tokens will be transferred to during minting
 const RECIPIENT_ADDRESS = "0x...";
 

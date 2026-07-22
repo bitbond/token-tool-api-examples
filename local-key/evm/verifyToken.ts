@@ -5,17 +5,10 @@ import {
   submitVerification,
   pollVerificationStatus,
 } from "../../common/verifyApi";
+import { CHAIN_ID, RPC_URL, TOKEN_ADDRESS } from "./config";
 
-// Edit the values below according to your needs
-
-// Address of the token contract you want to verify.
-// This is the deployed token address, which deployToken.ts prints on success.
-const CONTRACT_ADDRESS = "0x...";
-
-// Chain ID of the network the token was deployed to.
-// Should match the CHAIN_ID used in deployToken.ts (11155111 = Sepolia Testnet).
-// Supported networks can be found in the Bitbond Token Tool documentation.
-const CHAIN_ID = 11155111;
+// The token contract (TOKEN_ADDRESS), CHAIN_ID, and RPC_URL come from ./config.
+// The knobs below are specific to verification.
 
 // Source contract name of the deployed token. The default token deployed by
 // deployToken.ts uses "FullFeatureTokenV2".
@@ -24,10 +17,6 @@ const contractName = "FullFeatureTokenV2";
 // Block explorer to verify the contract on. Use the default explorer for your
 // network ("etherscan" for Ethereum/Sepolia).
 const explorerName: ExplorerName = "etherscan";
-
-// The RPC URL of the EVM network the token lives on, for example Ethereum
-// Sepolia Testnet.
-const rpcUrl = "https://ethereum-sepolia-rpc.publicnode.com";
 
 // Minimal ABI to read the contract name and hash from the deployed token.
 const CONTRACT_METADATA_ABI = [
@@ -41,9 +30,9 @@ const DEFAULT_HASH =
 
 void (async () => {
   try {
-    const provider = new ethers.JsonRpcProvider(rpcUrl);
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
     const contract = new ethers.Contract(
-      CONTRACT_ADDRESS,
+      TOKEN_ADDRESS,
       CONTRACT_METADATA_ABI,
       provider
     );
@@ -59,7 +48,7 @@ void (async () => {
     console.log("Resolving creation transaction...");
     const creationTxHash = await getCreationTransactionHash({
       chainId: CHAIN_ID,
-      address: CONTRACT_ADDRESS,
+      address: TOKEN_ADDRESS,
       explorerName,
     });
 
@@ -67,7 +56,7 @@ void (async () => {
     const guid = await submitVerification({
       contractName,
       chainId: CHAIN_ID,
-      contractAddress: CONTRACT_ADDRESS,
+      contractAddress: TOKEN_ADDRESS,
       customContractName,
       creationTxHash,
       contractHash,

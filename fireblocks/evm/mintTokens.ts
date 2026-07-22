@@ -1,24 +1,21 @@
-import { BasePath, Fireblocks, TransactionOperation, TransferPeerPathType } from "@fireblocks/ts-sdk";
+import { TransactionOperation, TransferPeerPathType } from "@fireblocks/ts-sdk";
 import { ethers } from "ethers";
-import fs from "fs";
+import {
+  ASSET_ID,
+  fireblocksClient,
+  TOKEN_ADDRESS,
+  TOKEN_DECIMALS,
+  VAULT_ID,
+} from "./config";
 
-// Edit the values below according to your needs
-// The address of the token contract to mint tokens from
-const CONTRACT_ADDRESS = "0x...";
+// The token contract, decimals, vault, and client come from ./config. The knobs
+// below are specific to minting.
 // The address of the recipient to mint tokens to
 const RECIPIENT_ADDRESS = "0x...";
 // The amount of tokens to be minted
 const AMOUNT_TO_MINT = "3.0";
-// The number of decimals the token uses
-const TOKEN_DECIMALS = 18;
 
 const fireblocksParams = {
-  // Vault ID that is used to sign the transaction,
-  // Could be any vault with enough balance to cover the transaction fee
-  vaultId: "0",
-  // Determines the network where transaction is executed,
-  // refer to Fireblocks documentation for other native asset codes
-  assetId: "ETH_TEST5",
   // Unique ID to ensure that the transaction is not run twice
   // https://developers.fireblocks.com/docs/creating-a-transaction#api-idempotency-best-practice
   externalTxId: "01234",
@@ -28,11 +25,7 @@ const fireblocksParams = {
   amount: "0",
 };
 
-const fireblocks = new Fireblocks({
-  apiKey: fs.readFileSync("./fireblocks/evm/fireblocks_api_key", "utf-8").trim(),
-  basePath: BasePath.EU,
-  secretKey: fs.readFileSync("./fireblocks/evm/fireblocks_private_key", "utf-8").trim()
-});
+const fireblocks = fireblocksClient();
 
 const MINT_ABI = [
   "function mint(address to, uint256 amount) external",
@@ -53,15 +46,15 @@ const MINT_ABI = [
   const tx = await fireblocks.transactions.createTransaction({
     transactionRequest: {
       operation: TransactionOperation.ContractCall,
-      assetId: fireblocksParams.assetId,
+      assetId: ASSET_ID,
       source: {
         type: TransferPeerPathType.VaultAccount,
-        id: fireblocksParams.vaultId,
+        id: VAULT_ID,
       },
       destination: {
         type: TransferPeerPathType.OneTimeAddress,
         oneTimeAddress: {
-          address: CONTRACT_ADDRESS,
+          address: TOKEN_ADDRESS,
         },
       },
       note: fireblocksParams.note,
