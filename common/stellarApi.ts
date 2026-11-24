@@ -207,6 +207,29 @@ export async function buildSignSubmit(
   secretKey: string,
   label: string
 ): Promise<{ hash: string; txKind: TxKind; status: "success" }> {
+  return buildSubmitWith(
+    chainId,
+    buildPath,
+    buildBody,
+    (xdr) => signXdr(xdr, secretKey, chainId),
+    label
+  );
+}
+
+/**
+ * Signs an unsigned XDR and returns the signed XDR. Lets the same build ->
+ * submit -> poll lifecycle run with any key custody (local key, Fireblocks, ...).
+ */
+export type XdrSigner = (xdr: string, label: string) => string | Promise<string>;
+
+/** `buildSignSubmit` with a custom signer instead of a local secret key. */
+export async function buildSubmitWith(
+  chainId: ChainId,
+  buildPath: string,
+  buildBody: Record<string, unknown>,
+  sign: XdrSigner,
+  label: string
+): Promise<{ hash: string; txKind: TxKind; status: "success" }> {
   console.log(`\n[${label}] building...`);
   const built = await apiPost<BuildResult>(buildPath, { chainId, ...buildBody });
   console.log(`[${label}] hash: ${built.hash}`);
@@ -216,7 +239,7 @@ export async function buildSignSubmit(
 
   // Persist `built.hash` here in a real integration, BEFORE signing, so a crash
   // mid-flight can be reconciled by polling the hash instead of blind-retrying.
-  const signed = signXdr(built.xdr, secretKey, chainId);
+  const signed = await sign(built.xdr, label);
 
   console.log(`[${label}] submitting...`);
   await submit(chainId, signed);

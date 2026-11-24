@@ -2,10 +2,12 @@
 
 # Bitbond Token Tool API examples
 This repository contains a suite of script samples that demonstrate how to
-programmatically interact with Bitbond Token Tool contracts on **EVM chains**. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
+programmatically interact with Bitbond Token Tool on **EVM chains**, **Stellar** and **XRPL**. Refer to [Token Tool product documentation](https://docs.bitbond.com/asset-tokenization-suite/token-tool/intro-token-tool) for additional context.
 
 Contents by key custody provider:
-* [Fireblocks](./fireblocks/evm/README.md)
+* [Fireblocks (EVM)](./fireblocks/evm/README.md)
+* [Fireblocks (Stellar: Classic & Soroban)](./fireblocks/stellar/README.md)
+* [Fireblocks (XRPL: Multi-Purpose Tokens)](./fireblocks/xrpl/README.md)
 * [Ripple Custody (formerly Metaco Harmonize)](./metaco/evm/README.md)
 * [Local key](./local-key/evm/README.md) (*basic illustration only*)
 * [Solana (Local key)](./local-key/solana/README.md) (*basic illustration only*)
