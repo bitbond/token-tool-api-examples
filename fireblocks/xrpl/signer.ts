@@ -6,6 +6,7 @@ import {
   TransactionMetadata,
   verifyKeypairSignature,
 } from "xrpl";
+import { fireblocksClient } from "../../common/fireblocksClient";
 import { fireblocksRawSign, vaultPublicKey } from "../../common/fireblocksRawSign";
 import {
   BuildResult,
@@ -14,7 +15,7 @@ import {
   toLowSDer,
   xrplWsUrl,
 } from "../../common/xrplApi";
-import { ASSET_ID, CHAIN_ID, fireblocksClient } from "./config";
+import { ASSET_ID, CHAIN_ID } from "./config";
 
 const fireblocks = fireblocksClient();
 

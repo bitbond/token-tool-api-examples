@@ -8,3 +8,6 @@ dist/
 # Key files
 *_key
 *_secret
+
+# Environment
+.env

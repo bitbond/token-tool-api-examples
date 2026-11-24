@@ -1,5 +1,3 @@
-import { BasePath, Fireblocks } from "@fireblocks/ts-sdk";
-import fs from "fs";
 import { XrplChainId } from "../../common/xrplApi";
 
 // ============================================================================
@@ -31,12 +29,3 @@ export const ISSUANCE_ID = "";
 // Decimals (AssetScale) the token uses. Set at create, then reused to convert
 // human amounts to base units for mint / distribute / clawback.
 export const DECIMALS = 6;
-
-// Fireblocks client built from the API user key + secret key files. The *_key
-// suffix is gitignored - never commit real keys.
-export const fireblocksClient = (): Fireblocks =>
-  new Fireblocks({
-    apiKey: fs.readFileSync("./fireblocks/xrpl/fireblocks_api_key", "utf-8").trim(),
-    basePath: BasePath.EU,
-    secretKey: fs.readFileSync("./fireblocks/xrpl/fireblocks_private_key", "utf-8").trim(),
-  });

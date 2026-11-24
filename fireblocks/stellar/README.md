@@ -53,16 +53,21 @@ script cannot get the same transaction signed twice. The logic lives in
 ## Setup
 
 1. `yarn install`
-2. Save the Fireblocks API user key and its secret key as
-   `fireblocks/stellar/fireblocks_api_key` and
-   `fireblocks/stellar/fireblocks_private_key`. See `fireblocks_api_key.example`
-   and `fireblocks_private_key.example` in the repo root for the format. The
-   `*_key` suffix is gitignored.
+2. Create an API user with the **Signer** role. Pair it with the workspace's
+   **API Co-Signer**, otherwise its requests are never signed. Generate its key
+   pair outside the repository:
+   ```bash
+   openssl req -new -newkey rsa:4096 -nodes -keyout fireblocks_secret.key -out fireblocks.csr -subj '/O=<your organisation>'
+   ```
+   Upload `fireblocks.csr` in the Console. Then copy [`.env.example`](../../.env.example)
+   to `.env` in the repo root (it is gitignored) and set `FIREBLOCKS_API_KEY` and
+   `FIREBLOCKS_API_PRIVATE_KEY_PATH`. Set `FIREBLOCKS_API_BASE_URL` only for a
+   sandbox or EU workspace. Environment variables already set take precedence
+   over `.env`.
 3. Fill in [`config.ts`](./config.ts) once: `CHAIN_ID`, the vault IDs and their
    `G...` addresses, the asset `CODE` and `SUPPLY`. After a SEP-41 deploy, also
    set `TOKEN_ADDRESS` to the printed `C...` address. `ASSET_ID` follows
-   `CHAIN_ID`. The client uses `BasePath.EU`; change it if your workspace is on
-   another region.
+   `CHAIN_ID`.
 
 ## Scripts
 
