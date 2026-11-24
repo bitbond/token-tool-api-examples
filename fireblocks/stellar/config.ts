@@ -1,5 +1,3 @@
-import { BasePath, Fireblocks } from "@fireblocks/ts-sdk";
-import fs from "fs";
 import { ChainId } from "../../common/stellarApi";
 
 // ============================================================================
@@ -47,12 +45,3 @@ export const ADMIN_ADDRESS = ISSUER_ADDRESS;
 // The deployed token contract (C...). Fill this in after running deployToken.ts
 // (it is printed on the deploy output).
 export const TOKEN_ADDRESS = "C...";
-
-// Fireblocks client built from the API user key + secret key files. The *_key
-// suffix is gitignored - never commit real keys.
-export const fireblocksClient = (): Fireblocks =>
-  new Fireblocks({
-    apiKey: fs.readFileSync("./fireblocks/stellar/fireblocks_api_key", "utf-8").trim(),
-    basePath: BasePath.EU,
-    secretKey: fs.readFileSync("./fireblocks/stellar/fireblocks_private_key", "utf-8").trim(),
-  });
