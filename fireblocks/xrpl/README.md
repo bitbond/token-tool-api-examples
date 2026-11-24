@@ -52,9 +52,17 @@ get the same transaction signed twice.
 ## Setup
 
 1. `yarn install`
-2. Save the Fireblocks API user key and its secret key as
-   `fireblocks/xrpl/fireblocks_api_key` and `fireblocks/xrpl/fireblocks_private_key`.
-   See the `*.example` files in the repo root for the format.
+2. Create an API user with the **Signer** role. Pair it with the workspace's
+   **API Co-Signer**, otherwise its requests are never signed. Generate its key
+   pair outside the repository:
+   ```bash
+   openssl req -new -newkey rsa:4096 -nodes -keyout fireblocks_secret.key -out fireblocks.csr -subj '/O=<your organisation>'
+   ```
+   Upload `fireblocks.csr` in the Console. Then copy [`.env.example`](../../.env.example)
+   to `.env` in the repo root (it is gitignored) and set `FIREBLOCKS_API_KEY` and
+   `FIREBLOCKS_API_PRIVATE_KEY_PATH`. Set `FIREBLOCKS_API_BASE_URL` only for a
+   sandbox or EU workspace. Environment variables already set take precedence
+   over `.env`.
 3. Fill in [`config.ts`](./config.ts): `CHAIN_ID`, the issuer vault ID and its
    `r...` address, and `DECIMALS`. After creating the token, also set
    `ISSUANCE_ID`.

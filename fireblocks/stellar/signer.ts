@@ -1,7 +1,8 @@
 import { Networks, StrKey, TransactionBuilder } from "@stellar/stellar-sdk";
+import { fireblocksClient } from "../../common/fireblocksClient";
 import { fireblocksRawSign } from "../../common/fireblocksRawSign";
 import { XdrSigner } from "../../common/stellarApi";
-import { ASSET_ID, CHAIN_ID, fireblocksClient } from "./config";
+import { ASSET_ID, CHAIN_ID } from "./config";
 
 const fireblocks = fireblocksClient();
 
